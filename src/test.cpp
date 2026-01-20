@@ -1,5 +1,6 @@
 #include <iostream>
 #include "toml.hpp"
+#include "logger.h"
 
 
 /*
@@ -18,6 +19,12 @@ int main(int argc, char** argv)
         std::cerr << "Parsing failed:\n" << err << "\n";
         return 1;
     }
+
+    Logger logger("logfile.txt"); // Create logger instance
+    // Example usage of the logger
+    logger.log(INFO, "Program started.");
+    logger.log(DEBUG, "Debugging information.");
+    logger.log(ERROR, "An error occurred.");
 
     return 0;
 }

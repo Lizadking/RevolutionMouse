@@ -4,10 +4,8 @@ CXXFLAGS = -Wall
 bin: main.o monitor.o
 	gcc -Wall main.o monitor.o -lwiiuse -lbluetooth -lm -ldrm -lX11 -lXrandr -lwayland-client -o bin
 
-test: toml.hpp
+test: toml.hpp logger.h
 	$(CXX) $(CXXFLAGS) test.cpp -lwiiuse -lbluetooth -lm -o test
-
-
 
 
 profileDriver: profileDriver.cpp profileNix.o profileManagerNix.o virtualDeviceNix.o
