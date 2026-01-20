@@ -4,10 +4,17 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <linux/uinput.h>
+#include <math.h>
 
+// THERE SHOULD be conditional compiles for these headers as they are X11 or Wayland exclusive !! 
+// SHOULD ALSO HAVE CONDITIONALS IN THE MAKEFILE (ugh Cmake)
+
+#include "monitor.h"
 
 #define MAX_WIIMOTES				4
 #define STANDARD_TIMEOUT 5
+#define THRESEHOLD_VALUE 100
+#define JUMP_PREVENTION 30
 
 
 
@@ -26,6 +33,11 @@ static void setup_abs(int fd, int type, int min, int max, int res);
 int main(int argc, char ** agrv)
 {
     wiimote ** wiimotes;
+	monitor monitorSession;
+
+	/*FOR NOW MANUALLY SET MONITOR RESOLUTIOn*/
+	monitorSession.height = 1080;
+	monitorSession.width = 2160;
     
     int found = 0;
     int connected = 0;
@@ -43,7 +55,7 @@ int main(int argc, char ** agrv)
         return -1;
     }
 
-     /* Connect to wiimotes */
+    /* Connect to wiimotes */
     connected = wiiuse_connect(wiimotes,MAX_WIIMOTES);
 
     if(!connected)
@@ -57,16 +69,13 @@ int main(int argc, char ** agrv)
 
 	/* Manual config */
     wiiuse_set_aspect_ratio(wiimotes[0], WIIUSE_ASPECT_16_9);
-    wiiuse_set_ir_vres(wiimotes[0],3840,1080);
-    wiiuse_set_ir_vres(wiimotes[1],3840,1080);
-	wiiuse_set_ir_sensitivity(wiimotes[1], 5);
+    wiiuse_set_ir_vres(wiimotes[0],monitorSession.width * 2,monitorSession.height * 2 );
+
 
     //debug_printVirtualIRdata(wiimotes);
 
-    /*determine if I have to manually change the virtual aspect ratio */
-    usleep(200);
-    wiiuse_rumble(wiimotes[0], 0);
-	wiiuse_rumble(wiimotes[1], 0);
+   
+   
 
     /* Virtual device creation */
     printf("Creating virtual device...");
@@ -81,7 +90,7 @@ int main(int argc, char ** agrv)
     */
     ioctl(fd, UI_SET_EVBIT, EV_KEY);
     ioctl(fd, UI_SET_KEYBIT, BTN_LEFT);
-    //ioctl(fd, UI_SET_KEYBIT, KEY_F1);
+    ioctl(fd, UI_SET_KEYBIT, KEY_F1);
 
 	
 
@@ -91,10 +100,10 @@ int main(int argc, char ** agrv)
 		printf("Error\n");
 	}
 
-    setup_abs(fd, ABS_X, 0, 3840, 96); // mouse absolute input
+    setup_abs(fd, ABS_X, 0, monitorSession.width, 1600); // mouse absolute input last value is dpi
 
 
-	setup_abs(fd, ABS_Y, 0,  1080, 96); // mouse absolute input
+	setup_abs(fd, ABS_Y, 0, monitorSession.height, 1600); // mouse absolute input
 
     memset(&usetup, 0, sizeof(usetup));
     usetup.id.bustype = BUS_USB;
@@ -105,10 +114,9 @@ int main(int argc, char ** agrv)
     ioctl(fd, UI_DEV_SETUP, &usetup);
     ioctl(fd, UI_DEV_CREATE);
 
-
     sleep(1);
 
-
+    int test = 0;
 
     /* Main Input loop */
   	while (any_wiimote_connected(wiimotes, MAX_WIIMOTES)) 
@@ -150,12 +158,13 @@ int main(int argc, char ** agrv)
     
     wiiuse_cleanup(wiimotes, MAX_WIIMOTES);
     printf("cleaning up virtual device\n");
-     sleep(1);
+    sleep(1);
 
    ioctl(fd, UI_DEV_DESTROY);
+   
    close(fd);
 
-    return 0;
+   return 0;
 }
 
 void debug_printVirtualIRdata(wiimote ** wiimotes)
@@ -172,7 +181,7 @@ void handle_event(struct wiimote_t* wm, int fd)
 	printf("\n\n--- EVENT [id %i] ---\n", wm->unid);
 
 	/* if a button is pressed, report it */
-	if (IS_PRESSED(wm, WIIMOTE_BUTTON_A)) {
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_A)) {
 		printf("A pressed\n");
         /*demo */
 		
@@ -222,72 +231,42 @@ void handle_event(struct wiimote_t* wm, int fd)
 	if (IS_PRESSED(wm, WIIMOTE_BUTTON_HOME))	{
 		printf("HOME pressed\n");
 	}
-
-	/*
-	 *	Pressing minus will tell the wiimote we are no longer interested in movement.
-	 *	This is useful because it saves battery power.
-	 */
-	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_MINUS)) {
-		wiiuse_motion_sensing(wm, 0);
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_MINUS)) 
+	{
+		wiiuse_set_ir(wm, 0);
 	}
 
-	/*
-	 *	Pressing plus will tell the wiimote we are interested in movement.
-	 */
+
 	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_PLUS)) 
 	{
-		wiiuse_motion_sensing(wm, 1);
+		wiiuse_set_ir(wm, 1);
 
 		
 	}
-
-	/*
-	 *	Pressing B will toggle the rumble
-	 *
-	 *	if B is pressed but is not held, toggle the rumble
-	 */
-     
-	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_B)) {
-		wiiuse_toggle_rumble(wm);
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_B)) 
+	{
+		//wiiuse_toggle_rumble(wm);
 	}
         
 
 	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_UP)) {
-		wiiuse_set_ir(wm, 1);
+		//wiiuse_set_ir(wm, 1);
 	}
 	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_DOWN)) {
-		wiiuse_set_ir(wm, 0);
-	}
-
-	/*
-	 * Motion+ support
-	 */
-	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_ONE)) {
-		if (WIIUSE_USING_EXP(wm)) {
-			wiiuse_set_motion_plus(wm, 2);    // nunchuck pass-through
-		} else {
-			wiiuse_set_motion_plus(wm, 1);    // standalone
-		}
+		//wiiuse_set_ir(wm, 0);
 	}
 
 	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_TWO)) {
 		wiiuse_set_motion_plus(wm, 0); // off
 	}
-
-	/* if the accelerometer is turned on then print angles */
-	if (WIIUSE_USING_ACC(wm)) {
-		printf("wiimote roll  = %f [%f]\n", wm->orient.roll, wm->orient.a_roll);
-		printf("wiimote pitch = %f [%f]\n", wm->orient.pitch, wm->orient.a_pitch);
-		printf("wiimote yaw   = %f\n", wm->orient.yaw);
-	}
-
 	/*
 	 *	If IR tracking is enabled then print the coordinates
 	 *	on the virtual screen that the wiimote is pointing to.
 	 *
 	 *	Also make sure that we see at least 1 dot.
 	 */
-	if (WIIUSE_USING_IR(wm)) {
+	if (WIIUSE_USING_IR(wm)) 
+	{
 		int i = 0;
 
 		/* go through each of the 4 possible IR sources */
@@ -305,20 +284,24 @@ void handle_event(struct wiimote_t* wm, int fd)
 		/*THIS IS OS BAD BUT IT WORKS*/
 		printf("TEST FOR MOUSE INPUT\n");
 		printf("-IR cursor: (%u, %u)-\n", wm->ir.x, wm->ir.y);
-		 emit(fd, EV_ABS, ABS_X, 1 + wm->ir.x);
-        emit(fd, EV_ABS, ABS_Y, 1 + wm->ir.y);
-        emit(fd, EV_SYN, SYN_REPORT, 0);
+
+		/*only update the x and y cursor only if the current one is greater or less than the threshold value*/
+		/* Sometimes the wii remote will also have a miss-read in values which causes a jump in value, check to also prevent */
+			float newX = (1 + (wm->ir.x * 0.5));
+			float newY = (1 + (wm->ir.y *0.5));
+			emit(fd, EV_ABS, ABS_X,newX);
+			emit(fd, EV_ABS, ABS_Y,newY);
+			emit(fd, EV_SYN, SYN_REPORT, 0);
+			/*this polling rate needs to be fixed 10000 = 100hz is the lower limmit
+			*/
+		
+			
+			
+		
+    
+        
 	}
 
-
-
-	if (wm->exp.type == EXP_MOTION_PLUS ||
-	        wm->exp.type == EXP_MOTION_PLUS_NUNCHUK) {
-		printf("Motion+ angular rates (deg/sec): pitch:%03.2f roll:%03.2f yaw:%03.2f\n",
-		       wm->exp.mp.angle_rate_gyro.pitch,
-		       wm->exp.mp.angle_rate_gyro.roll,
-		       wm->exp.mp.angle_rate_gyro.yaw);
-	}
 }
 
 void handle_read(struct wiimote_t* wm, byte* data, unsigned short len) 
@@ -392,7 +375,8 @@ void emit(int fd, int type, int code, int val)
 
 static void setup_abs(int fd, int type, int min, int max, int res)
 {
-    struct uinput_abs_setup abs = {
+    struct uinput_abs_setup abs = 
+	{
         .code = type,
         .absinfo = {
             .minimum = min,
@@ -404,3 +388,41 @@ static void setup_abs(int fd, int type, int min, int max, int res)
     if (-1 == ioctl(fd, UI_ABS_SETUP, &abs))
         printf("error\n");
 }
+
+/*this should eventually be moved to it's own file as well as take it's on config struct
+int createVirtualDevice()
+{
+	 /*MESSY PLEASE FIX */
+     /*
+    * The ioctls below will enable the device that is about to be
+    * created, to pass key events, in this case the space key.
+    
+    ioctl(fd, UI_SET_EVBIT, EV_KEY);
+    ioctl(fd, UI_SET_KEYBIT, BTN_LEFT);
+    ioctl(fd, UI_SET_KEYBIT, KEY_F1);
+
+	
+
+	 Dirty validation for mouse check function setup abs 
+	if(-1 == ioctl(fd, UI_SET_EVBIT, EV_ABS)) // mouse absolute input
+	{
+		printf("Error\n");
+	}
+
+    setup_abs(fd, ABS_X, 0, monitorSession.width, 96); // mouse absolute input
+
+
+	setup_abs(fd, ABS_Y, 0, monitorSession.height, 96); // mouse absolute input
+
+    memset(&usetup, 0, sizeof(usetup));
+    usetup.id.bustype = BUS_USB;
+    usetup.id.vendor = 0x1234;  sample vendor 
+    usetup.id.product = 0x5678; sample product *
+    strcpy(usetup.name, "Example device");
+
+    ioctl(fd, UI_DEV_SETUP, &usetup);
+    ioctl(fd, UI_DEV_CREATE);
+
+    sleep(1);
+}      
+*/                                                                                                                                                                                                                   

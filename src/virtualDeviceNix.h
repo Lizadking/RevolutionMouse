@@ -1,0 +1,48 @@
+/*
+*
+*
+*/
+#ifndef VIRTUALDEVICENIX_H
+#define VIRTUALDEVICENIX_H
+#pragma once
+
+#include <iostream>
+#include "profileManagerNix.h"
+#include <libevdev/libevdev-uinput.h>
+
+class VirtualDeviceNix 
+{
+    public:
+        VirtualDeviceNix();
+
+        ~VirtualDeviceNix();
+
+        int initalize();
+
+        struct libevdev_uinput * getUinputDevice();
+
+        void setProfileManager(ProfileManagerNix * profile);
+
+        ProfileManagerNix * getProfileManager(); 
+
+        int getProfileManagerSize();
+
+        void pressWiiKey(int WII_BINDING);
+
+        
+
+
+
+
+
+
+
+
+    private:
+        struct libevdev_uinput * m_uinput = nullptr;
+        ProfileManagerNix * m_profileManager = nullptr;
+
+
+};
+
+#endif  

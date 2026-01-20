@@ -1,3 +1,5 @@
+GIT IGNORE THIS FILE
+
 12/12/2025
 
 Starting this project and I just need to make a few notes on my technology choices and some technical documentation.
@@ -39,3 +41,106 @@ Essentially a bluetooth connection (for HCI) is just a connetion made using a so
 go from there. This is also useful to know since it's how you can do IPC and read memeory from other processes.
 
 understand sockets with C, understand bluetooth. It's just going from the network to radio. 
+
+
+1/3/26
+A lot of work has been done to get a very basic version of this done with the wiiUse library. The main approach is actually creating a virtual device 
+on linux and then using that device as a mouse. However I have made the fool harty decission of deciding to take this from a simple tool I use only to me 
+to a full release. 
+
+The aim of this is to have a working but basic 0.1 Release (No ETA). 
+
+Wii Mouse 0.1 (beta) release features:
+
+1) There must be binaries built and tested for Windows and Linux 
+2) There is no test suite for this build (0.1X release)
+3) There must be basic support for mouse features including pointing, left/right click, and scoll
+4) There must be basic keyboard support as in mapping keypresses to functions on the wiimote
+5) There must be a gui implemented via the Imgui library to allow users to do the following:
+   - Pairing must be done via the GUI 
+   - Viewing currently connected remotes 
+   - Setting actions from the mouse/keyboard to the buttons of the wiimote
+   - Safely disconnecting the wiimotes from the system
+   - Checking bluetooth connectivity status
+6) The setup of the wii pointer bounds relative to display should be dynamic. (The virtual resolution of the pointer should map to the display without user input)
+   - This virtual resolution can be modified via settings 
+7) Support for profiles per wiimote (As in I should be able to set my wiimote to have bindings for Higurashi or something else)
+8) DEV ONLY: Have a proper start up and initalization for the program
+7) Source code will be hosted on Github AS A MIRROR for visability, the most recent branch will be hosted on forjo or codeberg. (While it will be FOSS, I will not personally be accepting pull requests )
+8) Smoothed out wii cursor movements (control the jitter)
+
+Design Notes:
+
+Windows Support should be last. Prioritize linux as the platform 
+Linux has two display servers X11 and Wayland. Support should be for both platforms 
+This project should be built using Cmake as well as have conditional includes for headers not supported by it's platform
+   - As in Wayland should only have wayland headers built and X11 as well
+This project should also take inspiration for handling OS dependent functions and libraries
+
+
+0.1XX version wishlist features:
+- CLI interface for UNIX Platforms 
+- Custom pointer icon (or even implment the rotation)
+
+0.2 wishlist:
+- Dynamic per monitor / session bounds (Have the sensitivity and other settings be on a per monitor basis and adjust to distance from monitor)
+- Multiple resolution / orientation setup (Support mixed resolution and setups with multiple monitors)
+- bounds for pointer (can select an area for the pointer to be active in)
+
+
+
+
+
+I think my implementation if fundamentally wrong. I think I need to create a virtual HID device instead of my current generic virtual device approach 
+I did notice that essentilaly we're using a HCI connection to emulate a HID device 
+
+1/4/25
+
+Not much work to be done today I just need to really pick a feature and get it out. I think the first feature that needs to be done is the dynamic virtual resolution settings. In fact since it's so core to the project I think I should get it done first and build around it. I have a decent
+prototype that is the current version. But now I should start towards building a real project and I am going to do the dynamic virtual 
+resolution for Wayland and X11 
+
+configuration setting 
+
+wait what the hell
+
+1) rotating the wiimote fucks up the pointer so i need to correct for that
+2) I think switching to HID would help with the lag that sometimes happens when the pointer is in use 
+
+
+1/6/25
+
+https://www.usb.org/sites/default/files/hid1_11.pdf
+Needed HID spec for the Linux USB device gadget 
+
+
+1/19/26
+
+Holy memory leak. In the profile driver at 
+=69081== 118 (48 direct, 70 indirect) bytes in 1 blocks are definitely lost in loss record 4 of 4
+==69081==    at 0x485EC13: calloc (vg_replace_malloc.c:1675)
+==69081==    by 0x48A58E6: UnknownInlinedFun (libevdev-uinput.c:37)
+==69081==    by 0x48A58E6: libevdev_uinput_create_from_device (libevdev-uinput.c:377)
+==69081==    by 0x4007AEE: VirtualDeviceNix::initalize() (in /run/media/lizadking/Programming/wiiMouse/src/profileDriver)
+==69081==    by 0x4007E78: main (in /run/media/lizadking/Programming/wiiMouse/src/profileDriver)
+
+it's 118 bytes but goddamn
+   
+
+Dependencies 
+-------------
+wiiuse
+libevdev
+toml (included doesn't need to be installed)
+
+   
+
+SOURCES (For write up)
+----------------------
+https://www.usb.org/hid - HID spec 
+https://wiki.archlinux.org/title/Bluetooth 
+https://github.com/xwiimote/xwiimote/blob/master/doc/PROTOCOL
+https://www.youtube.com/watch?v=D26sUZ6DHNQ
+https://wiiyourself.gl.tter.org/
+https://akihiko.shirai.as/projects/WiiRemote/
+https://www.usb.org/sites/default/files/hid1_11.pdf
