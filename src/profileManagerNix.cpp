@@ -4,6 +4,7 @@
 #include <iostream>
 #include "profileNix.h"
 #include "profileManagerNix.h"
+#include "toml.hpp"
 #include <libevdev/libevdev-uinput.h>
 
 ProfileManagerNix::ProfileManagerNix()
@@ -71,6 +72,7 @@ ProfileNix * ProfileManagerNix::getCurrentProfile()
         
     }
 }
+
 void ProfileManagerNix::changeProfile()
 {
    m_currentProfile++;

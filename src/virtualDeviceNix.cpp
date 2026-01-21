@@ -144,36 +144,7 @@ void VirtualDeviceNix::pressWiiKey(int WII_BINDING)
             break;
     }
 
-    // TEMP SOLUTION:
-    /*
-    * for mouse left they go into hex 0x110 (272) mouse right 0x111(273) anything above 255 should be converted to their corresponding mouse code 
-    
 
-    if(bindedButton >= 255)
-    {
-        std::cout<<"Temperoary mouse button adjustment"<<std::endl;
-        std::cout<<"Val: "<<bindedButton<<std::endl;
-        switch(bindedButton)
-        {
-            case 272:
-                libevdev_uinput_write_event(device,EV_KEY,BTN_LEFT,1);
-                libevdev_uinput_write_event(device,EV_SYN, SYN_REPORT, 0);
-
-                libevdev_uinput_write_event(device,EV_KEY,BTN_LEFT,0);
-                libevdev_uinput_write_event(device,EV_SYN, SYN_REPORT, 0);
-                break;
-            case 273:
-                libevdev_uinput_write_event(device,EV_KEY,BTN_RIGHT,1);
-                libevdev_uinput_write_event(device,EV_SYN, SYN_REPORT, 0);
-
-                libevdev_uinput_write_event(device,EV_KEY,BTN_RIGHT,0);
-                libevdev_uinput_write_event(device,EV_SYN, SYN_REPORT, 0);
-                break;
-
-        }
-    }
-        */
- 
         // With all the bindings and settings done execute the press
         int test = libevdev_uinput_write_event(device,EV_KEY,bindedButton,1);
         //std::cout<<bindedButton<<std::endl;

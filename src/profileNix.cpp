@@ -21,7 +21,8 @@ ProfileNix::ProfileNix()
         {WII_UP,0},
         {WII_DOWN,0},
         {WII_LEFT,0},
-        {WII_RIGHT,0}
+        {WII_RIGHT,0},
+        {WII_HOME,888}
     };
     m_profileName = "unamed_profile";
 }
@@ -68,7 +69,10 @@ int ProfileNix::getButtonProfile(int button)
 
         case WII_RIGHT:
             return m_profileMap.at(WII_RIGHT);
+        break;
 
+        case WII_HOME:
+            return m_profileMap.at(WII_HOME);
         break;
 
         default:

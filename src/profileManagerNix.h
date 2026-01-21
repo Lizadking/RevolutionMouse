@@ -23,13 +23,14 @@ class ProfileManagerNix
 
         ProfileNix * getCurrentProfile();
 
-        void loadProfilesFromFile(); // TODO 
-
+     
         void deleteProfile(int profileLocation); // TODO 
         
         void changeProfile();
         
         int getProfileListSize();
+
+
 
         
         

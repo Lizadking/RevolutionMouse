@@ -8,8 +8,8 @@ test: toml.hpp logger.h
 	$(CXX) $(CXXFLAGS) test.cpp -lwiiuse -lbluetooth -lm -o test
 
 
-profileDriver: profileDriver.cpp profileNix.o profileManagerNix.o virtualDeviceNix.o
-	$(CXX) $(CXXFLAGS) profileNix.o profileManagerNix.o virtualDeviceNix.o profileDriver.cpp -lwiiuse -lbluetooth -lm  `pkg-config --cflags --libs libevdev` -o profileDriver
+profiledriver: profileDriver.cpp profileNix.o profileManagerNix.o virtualDeviceNix.o wiiusehelper.h fileio.h
+	$(CXX) $(CXXFLAGS) profileNix.o profileManagerNix.o virtualDeviceNix.o profileDriver.cpp -lwiiuse -lbluetooth -lm  `pkg-config --cflags --libs libevdev` -o profiledriver
 
 profileNix.o: profileNix.h profileNix.cpp
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags --libs libevdev` -c profileNix.cpp

@@ -49,8 +49,6 @@ class ProfileNix
         void printProfile();
 
         
-    
-
     private:
         std::string m_profileName = "";
         std::map<int,int> m_profileMap;
