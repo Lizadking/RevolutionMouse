@@ -8,6 +8,7 @@
 #pragma once
 
 #include <iostream>
+#include <memory>
 #include "profileNix.h"
 #include <list>
 
@@ -17,11 +18,11 @@ class ProfileManagerNix
         ProfileManagerNix();
         ~ProfileManagerNix();
 
-        void addProfile(ProfileNix * profile);
+        void addProfile(ProfileNix &profile);
 
         ProfileNix * getProfile(unsigned int profileLocation);
 
-        ProfileNix * getCurrentProfile();
+        ProfileNix & getCurrentProfile();
 
      
         void deleteProfile(int profileLocation); // TODO 

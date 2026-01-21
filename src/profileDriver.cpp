@@ -5,6 +5,7 @@
 #include <unistd.h>   
 #include <fcntl.h>
 #include <string>
+#include <memory>
 #include "profileNix.h"
 #include "profileManagerNix.h"
 #include "virtualDeviceNix.h"
@@ -21,14 +22,28 @@ int main()
 	/*Create Logger instance */
 	Logger logger("logfile.txt"); 
 
-	/*FILE OPERATIONS: Load in all the profiles *
+	std::unique_ptr<ProfileNix> general(new ProfileNix());
+	//ProfileNix * general_ptr = new ProfileNix();
+    general->setProfileName("General");
+    general->setButtonProfile(WII_A,BTN_LEFT);
+    general->setButtonProfile(WII_B,BTN_RIGHT);
+    general->setButtonProfile(WII_ONE,KEY_F1);
+    general->setButtonProfile(WII_UP,KEY_PAGEUP);
+    general->setButtonProfile(WII_DOWN,KEY_PAGEDOWN);
+
+	std::unique_ptr<ProfileManagerNix> profileManager (new ProfileManagerNix());
+	//
+	// profileManager->addProfile(*general);
+	std::cout<<profileManager->getCurrentProfile().getProfileName()<<std::endl;
+     
+	/*FILE OPERATIONS: Load in all the profiles 
 	initalizeProfileDirectory(&logger);
 	iterateProfileDirectory(&logger,profileManager);
 
-	/* Initalize the profileManager */
+	/* Initalize the profileManager 
     ProfileManagerNix * profileManager = new ProfileManagerNix();
 
-	/* Building the virtual device */
+	/* Building the virtual device 
     VirtualDeviceNix * nixDevice_ptr = new VirtualDeviceNix();
     nixDevice_ptr->initalize();
     if(nixDevice_ptr->initalize() != 0)
@@ -37,12 +52,12 @@ int main()
         return -1;
     }
 
-	/* Bind profile manager to virtual device */
+	/* Bind profile manager to virtual device 
     nixDevice_ptr->setProfileManager(profileManager);
 
     /* CREATING TWO PROFILES FOR TESTING PURPOSES: A GENERAL MOUSE SETUP AND ANKI */
 
-    /*Creating General profile */
+    /*Creating General profile 
     ProfileNix * general_ptr = new ProfileNix();
     general_ptr->setProfileName("General");
     general_ptr->setButtonProfile(WII_A,BTN_LEFT);
@@ -68,16 +83,16 @@ int main()
     
    
 	// Note Assert: At this point there should be a valid virtual device AND binded with a profile manager
-    /******Wiiuse setup******/
+    /******Wiiuse setup*****
 	
     wiimote ** wiimotes;
     int found = 0;
     int connected = 0;
 
-    /* Initalize the array of wiimote objects (not connected yet) */
+    /* Initalize the array of wiimote objects (not connected yet) 
     wiimotes = wiiuse_init(MAX_WIIMOTES);
              
-    /* Find Wiimote devices */
+    /* Find Wiimote devices 
     found = wiiuse_find(wiimotes,MAX_WIIMOTES,STANDARD_TIMEOUT);
     if(!found)
     {
@@ -85,7 +100,7 @@ int main()
         return -1;
     }
 
-    /* Connect to wiimotes */
+    /* Connect to wiimotes 
     connected = wiiuse_connect(wiimotes,MAX_WIIMOTES);
     if(!connected)
     {
@@ -95,7 +110,7 @@ int main()
 
     wiiuse_set_leds(wiimotes[0],WIIMOTE_LED_1);
 	
-    /* Main Input loop */
+    /* Main Input loop 
   	while (any_wiimote_connected(wiimotes, MAX_WIIMOTES)) 
     {
        
@@ -107,18 +122,18 @@ int main()
                 switch (wiimotes[currWiimote]->event) 
                 {
 					case WIIUSE_EVENT:
-						/* a generic event occurred */
+						/* a generic event occurred 
 						handle_event(wiimotes[currWiimote],nixDevice_ptr);
 						break;
 
                     case WIIUSE_STATUS:
-						/* a status event occurred */
+						/* a status event occurred 
 						handle_ctrl_status(wiimotes[currWiimote]);
 						break;
 
                     case WIIUSE_DISCONNECT:
 					case WIIUSE_UNEXPECTED_DISCONNECT:
-						/* the wiimote disconnected */
+						/* the wiimote disconnected *
 						handle_disconnect(wiimotes[currWiimote]);
 						break;
 
@@ -138,5 +153,5 @@ int main()
     delete(profileManager);
     delete(nixDevice_ptr);
     return 0;
-
+*/
 }

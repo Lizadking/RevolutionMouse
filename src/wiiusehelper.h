@@ -63,7 +63,7 @@ void handle_event(struct wiimote_t* wm,VirtualDeviceNix * virtualDev)
     {
 		printf("A just pressed\n");
         virtualDev->pressWiiKey(WII_A);
-        std::cout<<virtualDev->getProfileManager()->getCurrentProfile()->getProfileName()<<std::endl;
+        //std::cout<<virtualDev->getProfileManager()->getCurrentProfile()->getProfileName()<<std::endl;
 		
 	}
     

@@ -1,6 +1,7 @@
 
 #include <list>
 #include <iterator>
+#include <memory>
 #include <iostream>
 #include "profileNix.h"
 #include "profileManagerNix.h"
@@ -15,21 +16,17 @@ ProfileManagerNix::ProfileManagerNix()
 ProfileManagerNix::~ProfileManagerNix()
 {
     std::cout<<"Clearing memory from profile manager"<<std::endl; 
-    for(auto it = m_profileList.begin(); it != m_profileList.end(); ++it)
-    {
-        delete *it;
-    }
     m_profileList.clear();
 }
-void ProfileManagerNix::addProfile(ProfileNix * profile)
+void ProfileManagerNix::addProfile(ProfileNix &profile)
 {
-    m_profileList.push_front(profile);
-    std::cout<<"added "<<profile->getProfileName()<<std::endl;
+    m_profileList.push_front(&profile);
+    std::cout<<"added "<<profile.getProfileName()<<std::endl;
 }
 
 ProfileNix * ProfileManagerNix::getProfile(unsigned int profileLocation)
 {
-    if(m_profileList.empty())
+    /* if(m_profileList.empty())
     {
         std::cout<<"Profile Manager is empty cannot return"<<std::endl;
         return nullptr;
@@ -41,15 +38,17 @@ ProfileNix * ProfileManagerNix::getProfile(unsigned int profileLocation)
         return nullptr;
     }
     else
-    {
+    {*/
+
         auto listFront = m_profileList.begin();
         std::advance(listFront,profileLocation);
         return *listFront;
-    }
+    
 }
 
-ProfileNix * ProfileManagerNix::getCurrentProfile()
+ProfileNix & ProfileManagerNix::getCurrentProfile()
 {
+    /*
     if(m_profileList.empty())
     {
         std::cout<<"Profile Manager is empty cannot return"<<std::endl;
@@ -63,14 +62,15 @@ ProfileNix * ProfileManagerNix::getCurrentProfile()
     }
     else
     {
+    */
 
         auto it = m_profileList.begin();
 
         std::advance(it,m_currentProfile);
 
-        return *it;
+        return **it;
         
-    }
+    
 }
 
 void ProfileManagerNix::changeProfile()
