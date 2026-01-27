@@ -126,13 +126,19 @@ Holy memory leak. In the profile driver at
 
 it's 118 bytes but goddamn
    
+1/22/26 
+So much shit is happening but I finally got the mod keys working. check the spec sheet I made for notes but it seems like this may be feature complete minus the gui
+all that is left for the profiles is to whip it all up in some smart pointers and it's done
 
+1/26/26
+This mouse just isn't responsive enough for my tastes. I think I may have to do multithreading and have the virtual device in it's own thread because the
 Dependencies 
 -------------
 wiiuse
-libevdev
+libevdev (linux)
 toml (included doesn't need to be installed)
-
+SDl2 
+bluez (linux)
    
 
 SOURCES (For write up)
@@ -144,3 +150,4 @@ https://www.youtube.com/watch?v=D26sUZ6DHNQ
 https://wiiyourself.gl.tter.org/
 https://akihiko.shirai.as/projects/WiiRemote/
 https://www.usb.org/sites/default/files/hid1_11.pdf
+https://elixir.bootlin.com/linux/v6.17/source/include/uapi/linux/input-event-co

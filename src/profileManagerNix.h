@@ -8,8 +8,13 @@
 #pragma once
 
 #include <iostream>
-#include "profileNix.h"
 #include <list>
+#include <memory>
+#include <string>
+#include <iterator>
+#include "profileNix.h"
+
+
 
 class ProfileManagerNix
 {
@@ -17,33 +22,28 @@ class ProfileManagerNix
         ProfileManagerNix();
         ~ProfileManagerNix();
 
-        void addProfile(ProfileNix * profile);
+        void addProfile(std::shared_ptr<ProfileNix>  profile);
 
-        ProfileNix * getProfile(unsigned int profileLocation);
+        void createProfile(std::string profileName);
 
-        ProfileNix * getCurrentProfile();
+        //ProfileNix &getProfile(unsigned int profileLocation);
 
-     
-        void deleteProfile(int profileLocation); // TODO 
+        ProfileNix &getCurrentProfile();
+
+        ProfileNix &getProfile(int positon);
+
+        void deleteProfile(int profileLocation); 
         
         void changeProfile();
         
         int getProfileListSize();
-
-
-
         
-        
-
-
-
+        void printProfiles();
 
     private:
-        int m_currentProfile = 0;
-        std::list<ProfileNix*> m_profileList;
-
-
-
+        
+        std::list<std::shared_ptr<ProfileNix>> m_profileList;
+        int  m_current =  0;
 };
 
 #endif

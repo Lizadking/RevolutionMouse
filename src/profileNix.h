@@ -35,14 +35,30 @@
 #define PROFILE_SWAP            888
 #define MOTION_MOUSE_ENABLE     777
 
+/* Struct: Tuple
+*
+*  Tuple[0]: modifier key
+*  Tuple[1]: Keycode
+*/ 
+typedef struct tuple
+{
+    int keys[2]; 
+}tuple;
+
 class ProfileNix
 {
     public:
         ProfileNix();
         //~ProfileNix();
         
-        int getButtonProfile(int button);
+        tuple &getButtonProfile(int button);
         void setButtonProfile(int button, int keyCode);
+        
+        int getModifierKey(int button);
+        void setModifierKey(int button, int keycode);
+
+        int getKeycode(int button);
+        void setKeycode(int button,int keycode);
 
         std::string getProfileName();
         void setProfileName(std::string name);
@@ -51,7 +67,7 @@ class ProfileNix
         
     private:
         std::string m_profileName = "";
-        std::map<int,int> m_profileMap;
+        std::map<int,tuple> m_profileMap;
 
 
 };

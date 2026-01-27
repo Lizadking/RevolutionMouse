@@ -9,10 +9,12 @@
 #include <iostream>
 #include "profileManagerNix.h"
 #include <libevdev/libevdev-uinput.h>
+#include <memory>
 
 class VirtualDeviceNix 
 {
     public:
+      
         VirtualDeviceNix();
 
         ~VirtualDeviceNix();
@@ -23,23 +25,16 @@ class VirtualDeviceNix
 
         void setProfileManager(ProfileManagerNix * profile);
 
-        ProfileManagerNix * getProfileManager(); 
+        //ProfileManagerNix &getProfileManager(); 
 
-        int getProfileManagerSize();
+        //int getProfileManagerSize();
 
-        void pressWiiKey(int WII_BINDING);
-
+        //void pressWiiKey(int WII_BINDING);
         
 
-
-
-
-
-
-
-
     private:
-        struct libevdev_uinput * m_uinput = nullptr;
+        struct libevdev *m_dev;
+        struct libevdev_uinput * m_uinput;
         ProfileManagerNix * m_profileManager = nullptr;
 
 
