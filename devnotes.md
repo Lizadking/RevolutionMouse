@@ -151,3 +151,4 @@ https://wiiyourself.gl.tter.org/
 https://akihiko.shirai.as/projects/WiiRemote/
 https://www.usb.org/sites/default/files/hid1_11.pdf
 https://elixir.bootlin.com/linux/v6.17/source/include/uapi/linux/input-event-co
+https://john-salamon.com/The_Linux_Input_Complex/#fn7

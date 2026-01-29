@@ -4,6 +4,7 @@
 *
 */
 #include "virtualDeviceNix.h"
+#include <memory>
 // No idea if this will be kept or not 
 
 void handle_disconnect(wiimote* wm) 
@@ -37,8 +38,23 @@ void handle_read(struct wiimote_t* wm, byte* data, unsigned short len)
 	printf("\n\n");
 }
 
+short any_wiimote_connected(wiimote** wm, int wiimotes) {
+	int i;
+	if (!wm) {
+		return 0;
+	}
 
-void handle_event(struct wiimote_t* wm,VirtualDeviceNix * virtualDev) 
+	for (i = 0; i < wiimotes; i++) {
+		if (wm[i] && WIIMOTE_IS_CONNECTED(wm[i])) {
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+
+void handle_event(struct wiimote_t* wm,std::shared_ptr<VirtualDeviceNix> virtualDev) 
 {
    
 	printf("\n\n--- EVENT [id %i] ---\n", wm->unid);
@@ -47,67 +63,67 @@ void handle_event(struct wiimote_t* wm,VirtualDeviceNix * virtualDev)
 	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_A)) 
     {
 		printf("A just pressed\n");
-        //virtualDev->pressWiiKey(WII_A);
-        //std::cout<<virtualDev->getProfileManager()->getCurrentProfile()->getProfileName()<<std::endl;
-		
+        virtualDev->pressWiiKey(WII_A);
+        
 	}
     
 	if (IS_PRESSED(wm, WIIMOTE_BUTTON_B)) {
 		printf("B pressed\n");
-        //virtualDev->pressWiiKey(WII_B);
+        virtualDev->pressWiiKey(WII_B);
 
 	}
 	if (IS_PRESSED(wm, WIIMOTE_BUTTON_UP)) {
 		printf("UP pressed\n");
-        //virtualDev->pressWiiKey(WII_UP);
+        virtualDev->pressWiiKey(WII_UP);
 	}
 		
 	if (IS_PRESSED(wm, WIIMOTE_BUTTON_DOWN)){
 		printf("DOWN pressed\n");
-        //virtualDev->pressWiiKey(WII_DOWN);
+        virtualDev->pressWiiKey(WII_DOWN);
 	}
 		
 	if (IS_PRESSED(wm, WIIMOTE_BUTTON_LEFT))	{
 		printf("LEFT pressed\n");
-        //virtualDev->pressWiiKey(WII_LEFT);
+        virtualDev->pressWiiKey(WII_LEFT);
 		
 	}
 	if (IS_PRESSED(wm, WIIMOTE_BUTTON_RIGHT))	{
 		printf("RIGHT pressed\n");
-        //virtualDev->pressWiiKey(WII_RIGHT);
+        virtualDev->pressWiiKey(WII_RIGHT);
 		
 	}
 	if (IS_PRESSED(wm, WIIMOTE_BUTTON_MINUS))	{
 		printf("MINUS pressed\n");
-        //virtualDev->pressWiiKey(WII_MINUS);
+        virtualDev->pressWiiKey(WII_MINUS);
 	}
 	if (IS_PRESSED(wm, WIIMOTE_BUTTON_PLUS))	{
 		printf("PLUS pressed\n");
-        //virtualDev->pressWiiKey(WII_PLUS);
+        virtualDev->pressWiiKey(WII_PLUS);
 	}
 	if (IS_PRESSED(wm, WIIMOTE_BUTTON_ONE)) {
 		printf("ONE pressed\n");
-        //virtualDev->pressWiiKey(WII_ONE);
+        virtualDev->pressWiiKey(WII_ONE);
 		
 	}
 	if (IS_PRESSED(wm, WIIMOTE_BUTTON_TWO)) {
 		printf("TWO pressed\n");
-        //virtualDev->pressWiiKey(WII_TWO);
+        virtualDev->pressWiiKey(WII_TWO);
 		
 	}
-	if (IS_PRESSED(wm, WIIMOTE_BUTTON_HOME))	{
+	if (IS_PRESSED(wm, WIIMOTE_BUTTON_HOME)){
 		printf("HOME pressed\n");
         //virtualDev->getProfileManager()->changeProfile();
+		virtualDev->virtualChangeProfile();
 	}
 	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_MINUS)) 
 	{
-		//wiiuse_set_ir(wm, 0);
+		wiiuse_set_ir(wm, 0);
 	}
 
 
 	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_PLUS)) 
 	{
-		//wiiuse_set_ir(wm, 1);
+		wiiuse_set_ir(wm, 1);
 
 		
 	}

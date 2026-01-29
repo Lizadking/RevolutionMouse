@@ -23,19 +23,24 @@ class VirtualDeviceNix
 
         struct libevdev_uinput * getUinputDevice();
 
-        void setProfileManager(ProfileManagerNix * profile);
+        void setProfileManager( std::shared_ptr<ProfileManagerNix> profile);
 
-        //ProfileManagerNix &getProfileManager(); 
+        std::shared_ptr<ProfileManagerNix> getProfileManager(); 
+
+        std::string virtualGetCurrentProfile();
+
+        void virtualChangeProfile();
+
 
         //int getProfileManagerSize();
 
-        //void pressWiiKey(int WII_BINDING);
+        void pressWiiKey(int WII_BINDING);
         
 
     private:
         struct libevdev *m_dev;
         struct libevdev_uinput * m_uinput;
-        ProfileManagerNix * m_profileManager = nullptr;
+        std::shared_ptr<ProfileManagerNix> m_profileManager;
 
 
 };

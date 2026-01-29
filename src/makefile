@@ -1,15 +1,8 @@
 CXX = g++
 CXXFLAGS = -Wall
 
-bin: main.o monitor.o
-	gcc -Wall main.o monitor.o -lwiiuse -lbluetooth -lm  -o bin
-
-test: toml.hpp logger.h
-	$(CXX) $(CXXFLAGS) test.cpp -lwiiuse -lbluetooth -lm -o test
-
-
-profiledriver: profileDriver.cpp profileNix.o profileManagerNix.o virtualDeviceNix.o wiiusehelper.h fileio.h
-	$(CXX) $(CXXFLAGS) profileNix.o profileManagerNix.o virtualDeviceNix.o profileDriver.cpp -lwiiuse -lbluetooth -lm  `pkg-config --cflags --libs libevdev` -o profiledriver
+bin: main.cpp profileNix.o profileManagerNix.o virtualDeviceNix.o wiiusehelper.h fileio.h
+	$(CXX) $(CXXFLAGS) profileNix.o profileManagerNix.o virtualDeviceNix.o main.cpp -lwiiuse -lbluetooth -lm  `pkg-config --cflags --libs libevdev` -o bin
 
 profileNix.o: profileNix.h profileNix.cpp
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags --libs libevdev` -c profileNix.cpp

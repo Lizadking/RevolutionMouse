@@ -26,6 +26,7 @@ ProfileNix::ProfileNix()
         {WII_HOME,{0,0}}
     };
     m_profileName = "unamed_profile";
+
 }
 /*
 *

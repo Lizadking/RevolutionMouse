@@ -47,15 +47,44 @@ void initalizeProfileDirectory(Logger * logger)
     }
 }
 
-void iterateProfileDirectory(Logger *logger)
+std::shared_ptr<ProfileNix> parseAndLoadProfile(toml::table tbl)
+{
+    std::shared_ptr<ProfileNix> m_profile =  std::make_shared<ProfileNix>();
+
+        m_profile->setProfileName(**tbl["PROFILE"]["NAME"].as_string());
+        m_profile->setKeycode(WII_A,**tbl["PROFILE"]["WII_A"].as_integer());
+        
+        m_profile->setModifierKey(WII_A,**tbl["PROFILE"]["WII_A_MOD"].as_integer());
+        m_profile->setKeycode(WII_B,**tbl["PROFILE"]["WII_B"].as_integer());
+        m_profile->setModifierKey(WII_B,**tbl["PROFILE"]["WII_B_MOD"].as_integer());
+        m_profile->setKeycode(WII_DOWN,**tbl["PROFILE"]["WII_DOWN"].as_integer());
+        m_profile->setModifierKey(WII_DOWN,**tbl["PROFILE"]["WII_DOWN_MOD"].as_integer());
+        m_profile->setKeycode(WII_HOME,**tbl["PROFILE"]["WII_HOME"].as_integer());
+        m_profile->setModifierKey(WII_HOME,**tbl["PROFILE"]["WII_HOME_MOD"].as_integer());
+        m_profile->setKeycode(WII_LEFT,**tbl["PROFILE"]["WII_LEFT"].as_integer());
+        m_profile->setModifierKey(WII_LEFT,**tbl["PROFILE"]["WII_LEFT_MOD"].as_integer());
+        m_profile->setKeycode(WII_RIGHT,**tbl["PROFILE"]["WII_RIGHT"].as_integer());
+        m_profile->setModifierKey(WII_RIGHT,**tbl["PROFILE"]["WII_RIGHT_MOD"].as_integer());
+        m_profile->setKeycode(WII_TWO,**tbl["PROFILE"]["WII_TWO"].as_integer());
+        m_profile->setModifierKey(WII_TWO,**tbl["PROFILE"]["WII_TWO_MOD"].as_integer());
+        m_profile->setKeycode(WII_UP,**tbl["PROFILE"]["WII_UP"].as_integer());
+        m_profile->setModifierKey(WII_UP,**tbl["PROFILE"]["WII_UP_MOD"].as_integer());
+
+        // m_profile->printProfile();
+
+    return m_profile;
+}
+
+void iterateProfileDirectory(Logger *logger,ProfileManagerNix &m_profile)
 {
     std::filesystem::path directorypath = "profiles";
+    toml::table tbl;
 
     /* Check if the profile directory is empty*/
     if(std::filesystem::is_empty(directorypath))
     {
         logger->log(INFO,"Profile Directory is empty, creating default profile");
-          auto tbl = toml::table
+        tbl = toml::table
         {
             {"PROFILE",toml::table{
                     {"NAME","default"},
@@ -107,11 +136,20 @@ void iterateProfileDirectory(Logger *logger)
         
         for(auto const& dir_entry : std::filesystem::directory_iterator{directorypath})
         {
-            std::cout<< dir_entry<<std::endl;
+          
+            tbl = toml::parse_file(dir_entry.path().string());
+            //std::cout<<tbl<<std::endl;
+            /*
+            * Could this be done with an interator->yes
+            * Am I going to use an interator -> no
+            */
+            m_profile.addProfile(parseAndLoadProfile(tbl));
 
         }
+        
     }
 }
+
 
 void writeProfileToDisk(ProfileNix * profile,Logger * logger)
 {

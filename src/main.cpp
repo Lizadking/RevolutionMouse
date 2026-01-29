@@ -26,7 +26,7 @@ int main()
     *********************************************************************/
 
 	Logger logger("logfile.txt"); /* Create Logger instance */
-    std::unique_ptr<VirtualDeviceNix> virtualDev = std::make_unique<VirtualDeviceNix>(); /* Create Virtual Device */
+    std::shared_ptr<VirtualDeviceNix> virtualDev = std::make_unique<VirtualDeviceNix>(); /* Create Virtual Device */
     std::shared_ptr<ProfileManagerNix>  profileManager = std::make_shared<ProfileManagerNix>(); /* Initalize the profileManager */
     
     /* Building the virtual device*/
@@ -53,10 +53,10 @@ int main()
     int found = 0;
     int connected = 0;
 
-    /* Initalize the array of wiimote objects (not connected yet) 
+    /* Initalize the array of wiimote objects (not connected yet) */
     wiimotes = wiiuse_init(MAX_WIIMOTES);
              
-    /* Find Wiimote devices 
+    /* Find Wiimote devices */
     found = wiiuse_find(wiimotes,MAX_WIIMOTES,STANDARD_TIMEOUT);
 
     if(!found)
@@ -65,7 +65,7 @@ int main()
         return -1;
     }
 
-    /* Connect to wiimotes 
+    /* Connect to wiimotes */
     connected = wiiuse_connect(wiimotes,MAX_WIIMOTES);
 
     if(!connected)
@@ -76,14 +76,14 @@ int main()
 
     wiiuse_set_leds(wiimotes[0],WIIMOTE_LED_1);
     wiiuse_set_aspect_ratio(wiimotes[0], WIIUSE_ASPECT_16_9);
-    */
+    
 
     /*********************************************************************
     ** 
     **  MAIN INPUT LOOP
     **
     *********************************************************************/
-    /*
+    
   	while (any_wiimote_connected(wiimotes, MAX_WIIMOTES)) 
     {
        
@@ -95,18 +95,18 @@ int main()
                 switch (wiimotes[currWiimote]->event) 
                 {
 					case WIIUSE_EVENT:
-						/* a generic event occurred 
-						handle_event(wiimotes[currWiimote],&virtualDev);
+						/* a generic event occurred */
+						handle_event(wiimotes[currWiimote],virtualDev);
 						break;
 
                     case WIIUSE_STATUS:
-						/* a status event occurred 
+						/* a status event occurred */
 						handle_ctrl_status(wiimotes[currWiimote]);
 						break;
 
                     case WIIUSE_DISCONNECT:
 					case WIIUSE_UNEXPECTED_DISCONNECT:
-						/* the wiimote disconnected 
+						/* the wiimote disconnected */
 						handle_disconnect(wiimotes[currWiimote]);
 						break;
 
@@ -120,8 +120,7 @@ int main()
         
     }
     
-    
-    */
+
     wiiuse_cleanup(wiimotes, MAX_WIIMOTES);
     
    

@@ -21,7 +21,7 @@ ProfileManagerNix::~ProfileManagerNix()
 void ProfileManagerNix::addProfile(std::shared_ptr<ProfileNix>  profile)
 {
     m_profileList.push_front(profile);
-    std::cout<<"added "<<profile->getProfileName()<<std::endl;
+    std::cout<<"Added Profile: "<<profile->getProfileName()<<std::endl;
 }
 
 void ProfileManagerNix::createProfile(std::string profileName = "unamed_profile")

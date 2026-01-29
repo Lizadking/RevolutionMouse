@@ -297,7 +297,7 @@ void handle_event(struct wiimote_t* wm, int fd)
 
 
 			*/
-			usleep(200);
+			usleep(400);
 		
 			
 			

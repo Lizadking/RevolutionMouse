@@ -22,7 +22,7 @@ class ProfileManagerNix
         ProfileManagerNix();
         ~ProfileManagerNix();
 
-        void addProfile(std::shared_ptr<ProfileNix>  profile);
+        void addProfile(std::shared_ptr<ProfileNix> profile);
 
         void createProfile(std::string profileName);
 
