@@ -13,11 +13,6 @@ profileManagerNix.o: profileManagerNix.h profileManagerNix.cpp
 virtualDeviceNix.o: virtualDeviceNix.h virtualDeviceNix.cpp
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags --libs libevdev` -c virtualDeviceNix.cpp
 
-main.o: main.c monitor.o
-	gcc -Wall -c main.c
-
-monitor.o: monitor.c monitor.h
-	gcc -Wall -c monitor.c
 
 clean:
 	rm *.o
