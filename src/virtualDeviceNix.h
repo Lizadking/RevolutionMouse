@@ -9,10 +9,12 @@
 #include <iostream>
 #include "profileManagerNix.h"
 #include <libevdev/libevdev-uinput.h>
+#include <memory>
 
 class VirtualDeviceNix 
 {
     public:
+      
         VirtualDeviceNix();
 
         ~VirtualDeviceNix();
@@ -21,26 +23,26 @@ class VirtualDeviceNix
 
         struct libevdev_uinput * getUinputDevice();
 
-        void setProfileManager(ProfileManagerNix * profile);
+        void setProfileManager( std::shared_ptr<ProfileManagerNix> profile);
 
-        ProfileManagerNix * getProfileManager(); 
+        std::shared_ptr<ProfileManagerNix> getProfileManager(); 
 
-        int getProfileManagerSize();
+        std::string virtualGetCurrentProfile();
+
+        void virtualChangeProfile();
+
+
+        //int getProfileManagerSize();
 
         void pressWiiKey(int WII_BINDING);
 
+        void moveMouse(int x,int y);
         
 
-
-
-
-
-
-
-
     private:
-        struct libevdev_uinput * m_uinput = nullptr;
-        ProfileManagerNix * m_profileManager = nullptr;
+        struct libevdev *m_dev;
+        struct libevdev_uinput * m_uinput;
+        std::shared_ptr<ProfileManagerNix> m_profileManager;
 
 
 };

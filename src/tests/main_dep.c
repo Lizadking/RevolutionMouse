@@ -36,8 +36,8 @@ int main(int argc, char ** agrv)
 	monitor monitorSession;
 
 	/*FOR NOW MANUALLY SET MONITOR RESOLUTIOn*/
-	monitorSession.height = 1080;
-	monitorSession.width = 2160;
+	monitorSession.height = 1300;
+	monitorSession.width = 2500;
     
     int found = 0;
     int connected = 0;
@@ -65,8 +65,7 @@ int main(int argc, char ** agrv)
     }
 
     wiiuse_set_leds(wiimotes[0],WIIMOTE_LED_1);
-	wiiuse_rumble(wiimotes[0], 1);
-
+	
 	/* Manual config */
     wiiuse_set_aspect_ratio(wiimotes[0], WIIUSE_ASPECT_16_9);
     wiiuse_set_ir_vres(wiimotes[0],monitorSession.width * 2,monitorSession.height * 2 );
@@ -100,7 +99,7 @@ int main(int argc, char ** agrv)
 		printf("Error\n");
 	}
 
-    setup_abs(fd, ABS_X, 0, monitorSession.width, 1600); // mouse absolute input last value is dpi
+    setup_abs(fd, ABS_X, 0, monitorSession.width, 2600); // mouse absolute input last value is dpi
 
 
 	setup_abs(fd, ABS_Y, 0, monitorSession.height, 1600); // mouse absolute input
@@ -251,9 +250,11 @@ void handle_event(struct wiimote_t* wm, int fd)
 
 	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_UP)) {
 		//wiiuse_set_ir(wm, 1);
+		wiiuse_motion_sensing(wm, 0);
 	}
 	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_DOWN)) {
 		//wiiuse_set_ir(wm, 0);
+		wiiuse_motion_sensing(wm, 1);
 	}
 
 	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_TWO)) {
@@ -293,13 +294,23 @@ void handle_event(struct wiimote_t* wm, int fd)
 			emit(fd, EV_ABS, ABS_Y,newY);
 			emit(fd, EV_SYN, SYN_REPORT, 0);
 			/*this polling rate needs to be fixed 10000 = 100hz is the lower limmit
+
+
 			*/
+			usleep(400);
 		
 			
 			
 		
     
         
+	}
+
+	if (WIIUSE_USING_ACC(wm)) 
+	{
+		printf("wiimote roll  = %f [%f]\n", wm->orient.roll, wm->orient.a_roll);
+		printf("wiimote pitch = %f [%f]\n", wm->orient.pitch, wm->orient.a_pitch);
+		printf("wiimote yaw   = %f\n", wm->orient.yaw);
 	}
 
 }

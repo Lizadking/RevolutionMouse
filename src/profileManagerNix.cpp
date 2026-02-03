@@ -3,84 +3,100 @@
 #include <iterator>
 #include <memory>
 #include <iostream>
+#include <iterator>
+#include <libevdev/libevdev-uinput.h>
+
 #include "profileNix.h"
 #include "profileManagerNix.h"
 #include "toml.hpp"
-#include <libevdev/libevdev-uinput.h>
 
-ProfileManagerNix::ProfileManagerNix()
-{
-   
-}
+
+
+ProfileManagerNix::ProfileManagerNix(){}
 
 ProfileManagerNix::~ProfileManagerNix()
 {
     std::cout<<"Clearing memory from profile manager"<<std::endl; 
     m_profileList.clear();
 }
-void ProfileManagerNix::addProfile(ProfileNix &profile)
+void ProfileManagerNix::addProfile(std::shared_ptr<ProfileNix>  profile)
 {
-    m_profileList.push_front(&profile);
-    std::cout<<"added "<<profile.getProfileName()<<std::endl;
+    m_profileList.push_front(profile);
+    std::cout<<"Added Profile: "<<profile->getProfileName()<<std::endl;
 }
 
-ProfileNix * ProfileManagerNix::getProfile(unsigned int profileLocation)
+void ProfileManagerNix::createProfile(std::string profileName = "unamed_profile")
 {
-    /* if(m_profileList.empty())
-    {
-        std::cout<<"Profile Manager is empty cannot return"<<std::endl;
-        return nullptr;
-    }
+    std::shared_ptr<ProfileNix> m_profile =  std::make_shared<ProfileNix>();
+    m_profile->setProfileName(profileName);
+    addProfile(m_profile);
 
-    else if(profileLocation >= m_profileList.size())
-    {
-        std::cout<<"Error: manager access is out of bounds "<<std::endl;
-        return nullptr;
-    }
-    else
-    {*/
+}
 
-        auto listFront = m_profileList.begin();
-        std::advance(listFront,profileLocation);
-        return *listFront;
+ProfileNix &ProfileManagerNix::getCurrentProfile()
+{
+    auto it =  m_profileList.begin();
+    std::advance(it,m_current);
+    return **it;
+}
+
+ProfileNix &ProfileManagerNix::getProfile(int positon)
+{
+    auto it =  m_profileList.begin();
+    std::advance(it,positon);
+
+    return **it;
+}
+
+void ProfileManagerNix::deleteProfile(int profileLocation)
+{
+    auto it =  m_profileList.begin();
     
-}
-
-ProfileNix & ProfileManagerNix::getCurrentProfile()
-{
-    /*
-    if(m_profileList.empty())
+    /* The list is empty */
+    if(it == m_profileList.end())
     {
-        std::cout<<"Profile Manager is empty cannot return"<<std::endl;
-        return nullptr;
+        std::cerr<<"[WARNING] ProfileManagerNix::deleteProfile() : m_profileList is empty"<<std::endl;
     }
 
-    else if(m_currentProfile >= m_profileList.size())
+    /* OOB */
+    else if(profileLocation < 0 || profileLocation > m_profileList.size() )
     {
-        std::cout<<"Error: manager access is out of bounds "<<std::endl;
-        return nullptr;
+        std::cerr<<"[WARNING] ProfileManagerNix::deleteProfile() : OOB "<<std::endl;
     }
     else
     {
     */
 
-        auto it = m_profileList.begin();
-
-        std::advance(it,m_currentProfile);
-
-        return **it;
-        
-    
+    std::advance(it,profileLocation-1);
+    m_profileList.erase(it);
+    }
+          
 }
 
 void ProfileManagerNix::changeProfile()
 {
-   m_currentProfile++;
-   if(m_currentProfile >= m_profileList.size())
-   {
+    if(m_current == m_profileList.size()-1)
+    {
         std::cout<<"Wrap around detected"<<std::endl;
-        m_currentProfile = 0;
-   }
+        m_current = 0;
+       
+        std::cout<<"currently at: "<<getProfile(m_current).getProfileName()<<std::endl;
+    }
+    else
+    {
+        m_current++;
+        std::cout<<"currently at: "<<getProfile(m_current).getProfileName()<<std::endl;
+    }
 }
- int ProfileManagerNix::getProfileListSize() {return m_profileList.size();}
 
+int ProfileManagerNix::getProfileListSize() {return m_profileList.size();}
+
+void ProfileManagerNix::printProfiles()
+{
+    auto it =  m_profileList.begin();
+    for(;it != m_profileList.end();++it)
+    {
+        std::shared_ptr<ProfileNix> curr = *it;
+        std::cout<<curr->getProfileName()<<std::endl;
+    }
+}

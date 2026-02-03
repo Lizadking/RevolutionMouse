@@ -1,20 +1,13 @@
 CXX = g++
 CXXFLAGS = -Wall
 
-bin: main.o monitor.o
-	gcc -Wall main.o monitor.o -lwiiuse -lbluetooth -lm -ldrm -lX11 -lXrandr -lwayland-client -o bin
-
-test: toml.hpp logger.h
-	$(CXX) $(CXXFLAGS) test.cpp -lwiiuse -lbluetooth -lm -o test
-
-
-profiledriver: profileDriver.cpp profileNix.o profileManagerNix.o virtualDeviceNix.o wiiusehelper.h fileio.h
-	$(CXX) $(CXXFLAGS) profileNix.o profileManagerNix.o virtualDeviceNix.o profileDriver.cpp -lwiiuse -lbluetooth -lm  `pkg-config --cflags --libs libevdev` -o profiledriver
+bin: main.cpp profileNix.o profileManagerNix.o virtualDeviceNix.o wiiusehelper.h fileio.h
+	$(CXX) $(CXXFLAGS) profileNix.o profileManagerNix.o virtualDeviceNix.o main.cpp -lwiiuse -lbluetooth -lm  `pkg-config --cflags --libs libevdev` -o bin
 
 profileNix.o: profileNix.h profileNix.cpp
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags --libs libevdev` -c profileNix.cpp
 
-profileManagerNix.o: profileManagerNix.h profileManagerNix.cpp
+profileManagerNix.o: profileManagerNix.h profileManagerNix.cpp 
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags --libs libevdev` -c profileManagerNix.cpp 
 
 virtualDeviceNix.o: virtualDeviceNix.h virtualDeviceNix.cpp
@@ -30,13 +23,7 @@ clean:
 	rm *.o
 	rm bin
 
-all: main.o monitor.o bin
-	
-	
-	
+
 run:
 	./bin
-
-clea:
-	rm *.o
 

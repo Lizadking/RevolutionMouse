@@ -3,23 +3,9 @@
 *
 *
 */
-
-
-short any_wiimote_connected(wiimote** wm, int wiimotes) 
-{
-	int i;
-	if (!wm) {
-		return 0;
-	}
-
-	for (i = 0; i < wiimotes; i++) {
-		if (wm[i] && WIIMOTE_IS_CONNECTED(wm[i])) {
-			return 1;
-		}
-	}
-
-	return 0;
-}
+#include "virtualDeviceNix.h"
+#include <memory>
+#include <math.h>
 
 void handle_disconnect(wiimote* wm) 
 {
@@ -52,8 +38,24 @@ void handle_read(struct wiimote_t* wm, byte* data, unsigned short len)
 	printf("\n\n");
 }
 
+short any_wiimote_connected(wiimote** wm, int wiimotes) {
+	int i;
+	if (!wm) {
+		return 0;
+	}
 
-void handle_event(struct wiimote_t* wm,VirtualDeviceNix * virtualDev) 
+	for (i = 0; i < wiimotes; i++) {
+		if (wm[i] && WIIMOTE_IS_CONNECTED(wm[i])) {
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+
+
+void handle_event(struct wiimote_t* wm,std::shared_ptr<VirtualDeviceNix> virtualDev) 
 {
    
 	printf("\n\n--- EVENT [id %i] ---\n", wm->unid);
@@ -63,8 +65,7 @@ void handle_event(struct wiimote_t* wm,VirtualDeviceNix * virtualDev)
     {
 		printf("A just pressed\n");
         virtualDev->pressWiiKey(WII_A);
-        //std::cout<<virtualDev->getProfileManager()->getCurrentProfile()->getProfileName()<<std::endl;
-		
+        
 	}
     
 	if (IS_PRESSED(wm, WIIMOTE_BUTTON_B)) {
@@ -110,19 +111,20 @@ void handle_event(struct wiimote_t* wm,VirtualDeviceNix * virtualDev)
         virtualDev->pressWiiKey(WII_TWO);
 		
 	}
-	if (IS_PRESSED(wm, WIIMOTE_BUTTON_HOME))	{
+	if (IS_PRESSED(wm, WIIMOTE_BUTTON_HOME)){
 		printf("HOME pressed\n");
-        virtualDev->getProfileManager()->changeProfile();
+        //virtualDev->getProfileManager()->changeProfile();
+		virtualDev->virtualChangeProfile();
 	}
 	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_MINUS)) 
 	{
-		//wiiuse_set_ir(wm, 0);
+		wiiuse_set_ir(wm, 0);
 	}
 
 
 	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_PLUS)) 
 	{
-		//wiiuse_set_ir(wm, 1);
+		wiiuse_set_ir(wm, 1);
 
 		
 	}
@@ -154,6 +156,137 @@ void handle_event(struct wiimote_t* wm,VirtualDeviceNix * virtualDev)
 			
 		
         
+	}
+
+}
+
+void handle_event_debug_motion(struct wiimote_t* wm,std::shared_ptr<VirtualDeviceNix> virtualDev) 
+{
+    
+	printf("\n\n--- EVENT [id %i] ---\n", wm->unid);
+
+	/*if a button is pressed, report it */
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_A)) 
+    {
+		printf("A just pressed\n");
+       
+	}
+    
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_B)) {
+		printf("B pressed\n");
+       
+
+	}
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_UP)) {
+		printf("UP pressed\n");
+        
+	}
+		
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_DOWN)){
+		printf("DOWN pressed\n");
+       
+	}
+		
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_LEFT))	{
+		printf("LEFT pressed\n");
+        
+		
+	}
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_RIGHT))	{
+		printf("RIGHT pressed\n");
+        
+		
+	}
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_MINUS))	{
+		printf("MINUS pressed\n");
+		wiiuse_motion_sensing(wm, 0);
+   
+	}
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_PLUS))	{
+		printf("PLUS pressed\n");
+		wiiuse_motion_sensing(wm, 1);
+    
+	}
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_ONE)) {
+		printf("ONE pressed\n");
+
+		
+	}
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_TWO)) {
+		printf("TWO pressed\n");
+
+		
+	}
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_HOME)){
+		printf("HOME pressed\n");
+        
+	}
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_MINUS)) 
+	{
+		wiiuse_set_ir(wm, 0);
+	}
+
+
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_PLUS)) 
+	{
+		wiiuse_set_ir(wm, 1);
+
+		
+	}
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_B)) 
+	{
+		//wiiuse_toggle_rumble(wm);
+	}
+        
+
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_UP)) {
+		wiiuse_set_ir(wm, 1);
+	}
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_DOWN)) {
+		wiiuse_set_ir(wm, 0);
+	}
+
+	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_TWO)) {
+		wiiuse_set_motion_plus(wm, 0); // off
+	}
+	/*
+	 *	If IR tracking is enabled then print the coordinates
+	 *	on the virtual screen that the wiimote is pointing to.
+	 *
+	 *	Also make sure that we see at least 1 dot.
+	 */
+	if (WIIUSE_USING_IR(wm)) 
+	{	
+		int i = 0;
+
+		/* go through each of the 4 possible IR sources */
+		for (; i < 4; ++i) {
+			/* check if the source is visible */
+			if (wm->ir.dot[i].visible) {
+				printf("IR source %i: (%u, %u)\n", i, wm->ir.dot[i].x, wm->ir.dot[i].y);
+			}
+		}
+
+		printf("IR cursor: (%u, %u)\n", wm->ir.x, wm->ir.y);
+		printf("IR z distance: %f\n", wm->ir.z);
+
+		virtualDev->moveMouse(wm->ir.x,wm->ir.y);
+        
+	}
+
+	if (WIIUSE_USING_ACC(wm)) 
+	{
+		
+		printf("wiimote roll  = %f [%f]\n", wm->orient.roll, wm->orient.a_roll);
+		printf("wiimote pitch = %f [%f]\n", wm->orient.pitch, wm->orient.a_pitch);
+		printf("wiimote yaw   = %f\n", wm->orient.yaw);
+		float newTheta = wm->orient.roll;
+		if(wm->orient.roll < 0){
+		 newTheta =  wm->orient.roll + 360;
+		}
+		
+		printf("wiimote roll_converted   = %f\n", newTheta);
+
 	}
 
 }
