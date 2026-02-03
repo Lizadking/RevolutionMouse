@@ -35,6 +35,8 @@ class VirtualDeviceNix
         //int getProfileManagerSize();
 
         void pressWiiKey(int WII_BINDING);
+
+        void moveMouse(int x,int y);
         
 
     private:

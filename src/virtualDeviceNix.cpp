@@ -55,18 +55,27 @@ int VirtualDeviceNix::initalize()
 
     */
     //TEMP play with these values, add sliders too ball 
-    struct input_absinfo absinfo{
+    struct input_absinfo absinfo_x{
     .value = 0,
     .minimum = 0,
-    .maximum = 12372,
+    .maximum = 2500,
     .fuzz = 0,
     .flat = 0,
-    .resolution = 40 //also dpi
+    .resolution = 2600 //also dpi
+    };
+
+    struct input_absinfo absinfo_y{
+    .value = 0,
+    .minimum = 0,
+    .maximum = 1300,
+    .fuzz = 0,
+    .flat = 0,
+    .resolution = 2600 //also dpi
     };
 
     libevdev_enable_property(m_dev,INPUT_PROP_POINTER);
-    int absProp = libevdev_enable_event_code(m_dev, EV_ABS, ABS_X,&absinfo);
-    int absPropY= libevdev_enable_event_code(m_dev, EV_ABS, ABS_Y,&absinfo);
+    int absPropX = libevdev_enable_event_code(m_dev, EV_ABS, ABS_X,&absinfo_x);
+    int absPropY= libevdev_enable_event_code(m_dev, EV_ABS, ABS_Y,&absinfo_y);
    
     libevdev_set_name(m_dev, "Virtual Device");
     libevdev_enable_event_type(m_dev, EV_KEY);
@@ -142,13 +151,7 @@ int VirtualDeviceNix::getProfileManagerSize()
 /*This is so ugly fix it later*/
 void VirtualDeviceNix::pressWiiKey(int WII_BINDING)
 {
-    // Must have a profile available 
-
-      
-    
-    
-    struct libevdev_uinput * device = getUinputDevice();
-
+  
     int keycode = m_profileManager->getCurrentProfile().getKeycode(WII_BINDING);
     int modkey = m_profileManager->getCurrentProfile().getModifierKey(WII_BINDING);
 
@@ -161,16 +164,25 @@ void VirtualDeviceNix::pressWiiKey(int WII_BINDING)
     // With all the bindings and settings done execute the press
 
     // DIRTY DISGUSTING FILTHY MOD KEY TEST
-    libevdev_uinput_write_event(device,EV_KEY,modkey,1);
-    libevdev_uinput_write_event(device,EV_KEY,keycode,1);
-    libevdev_uinput_write_event(device,EV_SYN, SYN_REPORT, 0);
+    libevdev_uinput_write_event(m_uinput,EV_KEY,modkey,1);
+    libevdev_uinput_write_event(m_uinput,EV_KEY,keycode,1);
+    libevdev_uinput_write_event(m_uinput,EV_SYN, SYN_REPORT, 0);
 
-    libevdev_uinput_write_event(device,EV_KEY,modkey,0);
-    libevdev_uinput_write_event(device,EV_KEY,keycode,0);
-    libevdev_uinput_write_event(device,EV_SYN, SYN_REPORT, 0);
+    libevdev_uinput_write_event(m_uinput,EV_KEY,modkey,0);
+    libevdev_uinput_write_event(m_uinput,EV_KEY,keycode,0);
+    libevdev_uinput_write_event(m_uinput,EV_SYN, SYN_REPORT, 0);
 
     
 
                 
 }
+
+ void VirtualDeviceNix::moveMouse(int x,int y)
+ {
+    libevdev_uinput_write_event(m_uinput, EV_ABS, ABS_X, x);
+    libevdev_uinput_write_event(m_uinput, EV_ABS, ABS_Y, y);
+    libevdev_uinput_write_event(m_uinput, EV_SYN, SYN_REPORT, 0);
+    usleep(800);
+
+ }
 
