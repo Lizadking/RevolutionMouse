@@ -65,7 +65,7 @@ void ProfileManagerNix::deleteProfile(int profileLocation)
     }
     else
     {
-    */
+    
 
     std::advance(it,profileLocation-1);
     m_profileList.erase(it);

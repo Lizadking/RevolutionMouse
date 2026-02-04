@@ -54,10 +54,10 @@ int main()
     int found = 0;
     int connected = 0;
 
-    /* Initalize the array of wiimote objects (not connected yet) 
+    /* Initalize the array of wiimote objects (not connected yet) */
     wiimotes = wiiuse_init(MAX_WIIMOTES);
              
-    /* Find Wiimote devices 
+    /* Find Wiimote devices */
     found = wiiuse_find(wiimotes,MAX_WIIMOTES,STANDARD_TIMEOUT);
 
     if(!found)
@@ -66,7 +66,7 @@ int main()
         return -1;
     }
 
-    /* Connect to wiimotes 
+    /* Connect to wiimotes */
     connected = wiiuse_connect(wiimotes,MAX_WIIMOTES);
 
     if(!connected)
@@ -105,13 +105,13 @@ int main()
 						break;
 
                     case WIIUSE_STATUS:
-						/* a status event occurred 
+						/* a status event occurred */
 						handle_ctrl_status(wiimotes[currWiimote]);
 						break;
 
                     case WIIUSE_DISCONNECT:
 					case WIIUSE_UNEXPECTED_DISCONNECT:
-						/* the wiimote disconnected *
+						/* the wiimote disconnected */
 						handle_disconnect(wiimotes[currWiimote]);
 						break;
 
@@ -139,5 +139,5 @@ int main()
 
     
     return 0;
-*/
+
 }
