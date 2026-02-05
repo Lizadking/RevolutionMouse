@@ -1,7 +1,7 @@
 #include <iostream>
 #include <unistd.h>
-#include "profileManagerNix.h"
-#include "virtualDeviceNix.h"
+#include "include/profileManagerNix.h"
+#include "include/virtualDeviceNix.h"
 #include <libevdev/libevdev-uinput.h>
 
 VirtualDeviceNix::VirtualDeviceNix(){}

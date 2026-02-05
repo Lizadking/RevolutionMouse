@@ -6,9 +6,9 @@
 #include <iterator>
 #include <libevdev/libevdev-uinput.h>
 
-#include "profileNix.h"
-#include "profileManagerNix.h"
-#include "toml.hpp"
+#include "include/profileNix.h"
+#include "include/profileManagerNix.h"
+#include "include/toml.hpp"
 
 
 

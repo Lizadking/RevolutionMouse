@@ -6,11 +6,12 @@
 #include <fcntl.h>
 #include <string>
 #include <memory>
-#include "profileNix.h"
-#include "profileManagerNix.h"
-#include "virtualDeviceNix.h"
-#include "wiiusehelper.h"
-#include "fileio.h"
+
+#include "include/profileNix.h"
+#include "include/profileManagerNix.h"
+#include "include/virtualDeviceNix.h"
+#include "include/wiiusehelper.h"
+#include "include/fileio.h"
 #include <libevdev/libevdev-uinput.h>
 
 #define MAX_WIIMOTES				1

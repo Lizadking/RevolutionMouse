@@ -1,3 +1,0 @@
-repository='external project URL'
-module='https://github.com/wiiuse/wiiuse/archive/refs/tags/0.15.6.tar.gz;FIND_PACKAGE_ARGS;0.15.6;EXACT'
-tag=''
