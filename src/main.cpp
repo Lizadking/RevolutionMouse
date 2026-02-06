@@ -13,6 +13,8 @@
 #include "include/wiiusehelper.h"
 #include "include/fileio.h"
 #include <libevdev/libevdev-uinput.h>
+#include <SDL.h>
+
 
 #define MAX_WIIMOTES				1
 #define STANDARD_TIMEOUT            5
@@ -20,7 +22,13 @@
 
 int main()
 {	
- 
+    /*********************************************************************
+    ** 
+    ** SDL INIT
+    **
+    *********************************************************************/
+    int initSDLEvent = SDL_Init(SDL_INIT_EVENTS);
+
     /*********************************************************************
     ** 
     ** INITIAL DATA STRUCTURE  SETUP
@@ -126,8 +134,13 @@ int main()
         
     }
     
-
+    /*********************************************************************
+    ** 
+    ** MEMORY CLEANUP
+    **
+    *********************************************************************/
     wiiuse_cleanup(wiimotes, MAX_WIIMOTES);
+    SDL_QuitSubSystem(SDL_INIT_EVENTS);
     
    
 

@@ -6,6 +6,7 @@
 #include "virtualDeviceNix.h"
 #include <memory>
 #include <math.h>
+#include <SDL.h>
 
 void handle_disconnect(wiimote* wm) 
 {
@@ -269,8 +270,15 @@ void handle_event_debug_motion(struct wiimote_t* wm,std::shared_ptr<VirtualDevic
 
 		printf("IR cursor: (%u, %u)\n", wm->ir.x, wm->ir.y);
 		printf("IR z distance: %f\n", wm->ir.z);
+    
+		//virtualDev->moveMouse(wm->ir.x,wm->ir.y);
+		int result = SDL_WarpMouseGlobal((int) wm->ir.x,(int) wm->ir.y);
+		std::cout<<result<<std::endl;
+		if(result < 0)
+		{
+			std::cout<<SDL_GetError()<<std::endl;
+		}
 
-		virtualDev->moveMouse(wm->ir.x,wm->ir.y);
         
 	}
 

@@ -14,6 +14,7 @@ find_package(PkgConfig REQUIRED)
 set(WIIUSE_VERSION 0.15.6)
 FetchContent_Declare(
     wiiuse
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
     URL https://github.com/wiiuse/wiiuse/archive/refs/tags/0.15.6.tar.gz
     FIND_PACKAGE_ARGS ${WIIUSE_VERSION} EXACT
 )
