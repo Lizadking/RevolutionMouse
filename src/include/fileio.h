@@ -34,6 +34,7 @@
 #define WII_HOME_TOML "WII_HOME"
 #define WII_HOME_MOD_TOML "WII_HOME_MOD"
 
+
 void initalizeProfileDirectory(Logger * logger)
 {
     std::filesystem::path directorypath = "profiles";
@@ -197,4 +198,10 @@ void writeProfileToDisk(ProfileNix * profile,Logger * logger)
     std::string logMsg = "Profile " + completeFile + " has been created at " + completePath + "!";
 
     logger->log(INFO,logMsg);
+}
+
+void emumerateDevicesNix()
+{
+    /* Enumerate the /dev/input/by-id/ path */
+    
 }

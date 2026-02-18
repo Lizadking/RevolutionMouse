@@ -7,13 +7,16 @@
 #include <string>
 #include <memory>
 
+#include "include/glad.h"
+#include <GLFW/glfw3.h>
+
 #include "include/profileNix.h"
 #include "include/profileManagerNix.h"
 #include "include/virtualDeviceNix.h"
 #include "include/wiiusehelper.h"
 #include "include/fileio.h"
 #include <libevdev/libevdev-uinput.h>
-#include <SDL.h>
+
 
 
 #define MAX_WIIMOTES				1
@@ -22,12 +25,7 @@
 
 int main()
 {	
-    /*********************************************************************
-    ** 
-    ** SDL INIT
-    **
-    *********************************************************************/
-    int initSDLEvent = SDL_Init(SDL_INIT_EVENTS);
+   
 
     /*********************************************************************
     ** 
@@ -140,7 +138,7 @@ int main()
     **
     *********************************************************************/
     wiiuse_cleanup(wiimotes, MAX_WIIMOTES);
-    SDL_QuitSubSystem(SDL_INIT_EVENTS);
+
     
    
 
