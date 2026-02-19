@@ -16,3 +16,5 @@ RevolutionMouse currently operates on Linux with the following dependencies
 - Wii Use (https://github.com/wiiuse/wiiuse)
 - BlueZ Bluetooth Drivers must be installed 
 - ImGui (https://github.com/ocornut/imgui)
+
+I am adding new lines here to delete them later
