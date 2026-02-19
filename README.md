@@ -1,7 +1,7 @@
 ## About
 RevolutionMouse is a userspace virtual device to simulate mouse and keyboard presses using the Nintendo Wii Remote!
 ## Features 
-- Use the Nintendo Wii Remote as a mouse using it's IR camera
+- Use the Nintendo Wii Remote as a mouse using its IR camera
 - Bind keypresses to the Wii Remote face buttons to simulate keyboard input
 - Use multiple profiles with various bindings to suit your needs 
 - Swap between profiles on the fly using the home button
