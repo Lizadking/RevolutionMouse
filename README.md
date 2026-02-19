@@ -1,11 +1,14 @@
-# RevolutionMouse 
 ## About
-RevolutionMouse is a userspace virtual device to simulate mouse and keyboard presses using the Nintendo Wii Remote 
+RevolutionMouse is a userspace virtual device to simulate mouse and keyboard presses using the Nintendo Wii Remote!
 ## Features 
-- 
+- Use the Nintendo Wii Remote as a mouse using it's IR camera
+- Bind keypresses to the Wii Remote face buttons to simulate keyboard input
+- Use multiple profiles with various bindings to suit your needs 
+- Swap between profiles on the fly using the home button
+
 ## Supported Platforms 
 - Linux
-    - Supported Display Protocols X11 (Wayland support is coming soon !)
+    - Supported Display Protocols X11 (Wayland support is coming soon!)
 ## Build Instructions 
 Currently build instructions are not available 
 
@@ -17,4 +20,14 @@ RevolutionMouse currently operates on Linux with the following dependencies
 - BlueZ Bluetooth Drivers must be installed 
 - ImGui (https://github.com/ocornut/imgui)
 
-I am adding new lines here to delete them later
+## Hardware Requirements
+- Official Nintendo Wii Remotes 
+    - Required for use of the Virtual Keyboard
+        - Supported Models: 
+            - Gen 1.0 (Bluetooth name: RVL-CNT-01)
+            - Gen 1.5 (Bluetooth name: RVL-CNT-01)
+            - Gen 2.0 (Bluetooth name: RVL-CNT-01-TR)
+
+- Nintendo Wii Sensor Bar 
+    - Required for using the IR Mouse
+        - USB sensor bars sold by third parties also work 
