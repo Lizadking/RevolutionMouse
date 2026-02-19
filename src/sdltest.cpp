@@ -219,7 +219,8 @@ std::vector<libevdev*> emumerateDeviceList()
 
 std::vector<std::string> getKbdDevices()
 {
-  std::filesystem::path directorypath = "/dev/input/by-id";
+  // TODO: Change this to by-path and test, testing still needs to be done
+  std::filesystem::path directorypath = "/dev/input/by-path";
   std::string targetEvent = "kbd";
   std::vector<std::string> kbdPaths;
 
