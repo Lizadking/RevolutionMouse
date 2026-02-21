@@ -55,9 +55,9 @@ src/virtualDeviceNix.cpp
 src/glad.c
 )
 
-# Globbing files for test SDL build
-set(SDL_TEST_FILES 
-src/sdltest.cpp
+# Globbing files for debug build
+set(DEBUG_FILES 
+src/debug.cpp
 src/monitor.cpp
 src/profileManagerNix.cpp
 src/profileNix.cpp
@@ -68,8 +68,8 @@ src/glad.c
 # Create the main binary
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
-#create SDL test binary
-add_executable(sdltest ${SDL_TEST_FILES})
+#create debug test binary
+add_executable(debug ${DEBUG_FILES})
 
 #--- MAIN BINARY LINKING ---------------
 # Imgui linking
@@ -95,9 +95,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE PkgConfig::LIBEVDEV wiiuse OpenGL:
 #---------------------------------------
 
 
-#----SDL TEST BINARY LINKING------------
+#----DEBUG BINARY LINKING------------
 # Imgui linking
-target_sources(sdltest PRIVATE
+target_sources(debug PRIVATE
     ${imgui_SOURCE_DIR}/imgui.cpp
     ${imgui_SOURCE_DIR}/imgui_demo.cpp
     ${imgui_SOURCE_DIR}/imgui_draw.cpp
@@ -107,9 +107,9 @@ target_sources(sdltest PRIVATE
     ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp # Or your chosen backend, e.g., SDL
 )
 
-target_include_directories(sdltest PRIVATE ${imgui_SOURCE_DIR})
-target_include_directories(sdltest PRIVATE ${imgui_SOURCE_DIR}/backends)
+target_include_directories(debug PRIVATE ${imgui_SOURCE_DIR})
+target_include_directories(debug PRIVATE ${imgui_SOURCE_DIR}/backends)
 
-target_include_directories(sdltest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(sdltest PRIVATE PkgConfig::LIBEVDEV wiiuse  OpenGL::GL glfw)
+target_include_directories(debug PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(debug PRIVATE PkgConfig::LIBEVDEV wiiuse  OpenGL::GL glfw)
 #----------------------------------------
