@@ -12,9 +12,9 @@ RevolutionMouse is a userspace virtual device to simulate mouse and keyboard pre
 ## Build Instructions 
 ### Building the Main Binary
 If building using Ninja from the root project directory 
-```cmake -S . -B build -G Ninja && cmake --build build --target revMouse && cd build```
+- ```cmake -S . -B build -G Ninja && cmake --build build --target revMouse && cd build```
 If building uisng Make
-```cmake -S . -B build  && cmake --build build --target  debug && cd build```
+- ```cmake -S . -B build  && cmake --build build --target  debug && cd build```
 
 
 
