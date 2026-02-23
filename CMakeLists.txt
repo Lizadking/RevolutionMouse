@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(FetchContent)
 
-project(revMouse VERSION 0.1)
+project(revolutionmouse VERSION 0.1)
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wall -g -fdiagnostics-color=always")
 set(CMAKE_COLOR_DIAGNOSTICS ON)
 

@@ -108,7 +108,7 @@ int main()
                 {
 					case WIIUSE_EVENT:
 						/* a generic event occurred */
-						handle_event_debug_motion(wiimotes[currWiimote],virtualDev);
+						handle_event(wiimotes[currWiimote],virtualDev);
 						break;
 
                     case WIIUSE_STATUS:

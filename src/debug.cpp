@@ -25,8 +25,10 @@
 *   Post-Condition: Returns a list of all the devices found
 */
 std::vector<libevdev*> emumerateDeviceList();
-
 std::vector<std::string> getKbdDevices();
+void imGuiMainRender();
+void openglPrerender();
+void openglPostrender();
 #define eventDeviceCheck  20 // Number of event devices to check, should end up being an option 
 
 int main()
@@ -89,48 +91,81 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         /*imgui render step / window creation */
-
         // Tell OpenGL a new frame is about to begin
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // Creating the window 
-        ImGui::Begin("Please work or I'm killing the nearest child");
-        ImGui::Text("I have 85 toddlers in my basement with a bomb strapped to one of them");
-        ImGui::End();
+        static int selectedItem = 0;
+        const char* items[] = { "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO" };
+        const char* previewValue = items[selectedItem];
 
-        /*Selectable */
-        /*Honestly I should just make this a component like in svelete */
-        static int selected = -1; // selectable variable 
-        std::vector<libevdev*> currentDevices = emumerateDeviceList();
-        if(ImGui::TreeNode("Keyboard(s)"))
+         /* Profile selection */
+        ImGui::Text("Profile(s)");
+        ImGui::PushItemWidth(200);
+        if(ImGui::BeginCombo(("##XXX"),previewValue))
+        {
+          for (int i = 0; i < 4;i++)
+          {
+            const bool is_selected = (selectedItem == i);
+
+            if(ImGui::Selectable(items[i]),is_selected)
+            {
+              selectedItem = i;
+            }
+
+            if(is_selected)
+            {
+              ImGui::SetItemDefaultFocus();
+            }
+          }
+          ImGui::EndCombo();
+          ImGui::PopItemWidth();
+        }
+        /*Save profile */
+        ImGui::SameLine();
+        if(ImGui::Button("Save"))
         {
 
-          ImGui::Text("Item 1");
-          ImGui::Text("Item 2");
-          /* 
-          for (int n = 0; n < currentDevices.size(); n++)
-          {
-            
-              char buf[32];
-              //std::cout<<libevdev_get_name(devices->at(n))<<std::endl;
-              
-              sprintf(buf,libevdev_get_name(currentDevices.at(n)));
-              
-              if (ImGui::Selectable(buf, selected == n))
-              {
-                  selected = n;
-              }
-                  
-              
-          }
-          */
-            
-            
-          ImGui::TreePop();
         }
-        ImGui::Text("Selected %d",selected);
+        /*Load profile */
+        ImGui::SameLine();
+        if(ImGui::Button("Load"))
+        {
+          
+        }
+
+        /*Device Selection */
+        ImGui::Text("Device");
+        ImGui::PushItemWidth(200);
+        if(ImGui::BeginCombo(("##XX"),previewValue))
+        {
+          for (int i = 0; i < 4;i++)
+          {
+            const bool is_selected = (selectedItem == i);
+
+            if(ImGui::Selectable(items[i]),is_selected)
+            {
+              selectedItem = i;
+            }
+
+            if(is_selected)
+            {
+              ImGui::SetItemDefaultFocus();
+            }
+          }
+          ImGui::EndCombo();
+          ImGui::PopItemWidth();
+        }
+
+  
+        
+
+          
+        
+   
+
+        
 
         // Render the Imgui elements
         ImGui::Render();
@@ -166,6 +201,12 @@ int main()
   return 0;
 }
 
+// This is a temporary thing just to manage the entire UI in one function, needs to be broken up and put into a single class eventually
+void imGuiMainRender()
+{
+
+
+}
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
    
@@ -189,6 +230,7 @@ std::vector<libevdev*> emumerateDeviceList()
 {
   
   /* Get all the kbd devices */
+  /* This function is incomplete as it needs to return something when the fd is -1 */
   std::vector<std::string> kbdPaths = getKbdDevices();
   std::vector<libevdev*> devices;
   
@@ -196,13 +238,13 @@ std::vector<libevdev*> emumerateDeviceList()
   for(int i = 0; i < kbdPaths.size(); i++)
   {
     struct libevdev *tempDev = nullptr;
-    std::cout<<kbdPaths.at(i)<<std::endl;
+    //std::cout<<kbdPaths.at(i)<<std::endl;
     int fd = open(kbdPaths.at(i).c_str(), O_RDWR|O_CLOEXEC);
     //std::cout<< fd<<std::endl;
 
     if(fd == -1)
     {
-      std::cout<<"Error couldn't find device"<<std::endl;
+      // std::cout<<"Error couldn't find device"<<std::endl;
     }
 
     else
