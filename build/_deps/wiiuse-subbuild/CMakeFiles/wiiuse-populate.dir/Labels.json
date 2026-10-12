@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/run/media/lizadking/Programming/RevolutionMouse/build/_deps/wiiuse-subbuild/CMakeFiles/wiiuse-populate"
+		},
+		{
+			"file" : "/run/media/lizadking/Programming/RevolutionMouse/build/_deps/wiiuse-subbuild/CMakeFiles/wiiuse-populate.rule"
+		},
+		{
+			"file" : "/run/media/lizadking/Programming/RevolutionMouse/build/_deps/wiiuse-subbuild/CMakeFiles/wiiuse-populate-complete.rule"
+		},
+		{
+			"file" : "/run/media/lizadking/Programming/RevolutionMouse/build/_deps/wiiuse-subbuild/wiiuse-populate-prefix/src/wiiuse-populate-stamp/wiiuse-populate-build.rule"
+		},
+		{
+			"file" : "/run/media/lizadking/Programming/RevolutionMouse/build/_deps/wiiuse-subbuild/wiiuse-populate-prefix/src/wiiuse-populate-stamp/wiiuse-populate-configure.rule"
+		},
+		{
+			"file" : "/run/media/lizadking/Programming/RevolutionMouse/build/_deps/wiiuse-subbuild/wiiuse-populate-prefix/src/wiiuse-populate-stamp/wiiuse-populate-download.rule"
+		},
+		{
+			"file" : "/run/media/lizadking/Programming/RevolutionMouse/build/_deps/wiiuse-subbuild/wiiuse-populate-prefix/src/wiiuse-populate-stamp/wiiuse-populate-install.rule"
+		},
+		{
+			"file" : "/run/media/lizadking/Programming/RevolutionMouse/build/_deps/wiiuse-subbuild/wiiuse-populate-prefix/src/wiiuse-populate-stamp/wiiuse-populate-mkdir.rule"
+		},
+		{
+			"file" : "/run/media/lizadking/Programming/RevolutionMouse/build/_deps/wiiuse-subbuild/wiiuse-populate-prefix/src/wiiuse-populate-stamp/wiiuse-populate-patch.rule"
+		},
+		{
+			"file" : "/run/media/lizadking/Programming/RevolutionMouse/build/_deps/wiiuse-subbuild/wiiuse-populate-prefix/src/wiiuse-populate-stamp/wiiuse-populate-test.rule"
+		},
+		{
+			"file" : "/run/media/lizadking/Programming/RevolutionMouse/build/_deps/wiiuse-subbuild/wiiuse-populate-prefix/src/wiiuse-populate-stamp/wiiuse-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"wiiuse-populate"
+		],
+		"name" : "wiiuse-populate"
+	}
+}

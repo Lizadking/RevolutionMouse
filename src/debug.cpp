@@ -9,17 +9,20 @@
 #include <vector>
 #include <string>
 #include <grp.h>
+#include <wiiuse.h>    
 
 #include "imgui.h"
 #include"imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "include/wiiusehelper.h"
 
 #include "include/glad.h"
 #include <GLFW/glfw3.h>
 
 
 
-
+#define MAX_WIIMOTES				1
+#define STANDARD_TIMEOUT            5
 /*
 *   enumerateDeviceList: Iterates the /dev/inputs/ directory for all devices 
 *   Post-Condition: Returns a list of all the devices found
@@ -47,7 +50,7 @@ int main()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     /*-----------GLFW Window Creation---------*/
-    GLFWwindow * window = glfwCreateWindow(SCREEN_WIDTH,SCREEN_HEIGHT,"Hey it's openGL", NULL, NULL);
+    GLFWwindow * window = glfwCreateWindow(SCREEN_WIDTH,SCREEN_HEIGHT,"Revolution Mouse v0.1", NULL, NULL);
     if(window == NULL)
     {
         std::cout<<" Failed to create glfw window" <<std::endl;
@@ -76,6 +79,13 @@ int main()
     ImGui_ImplGlfw_InitForOpenGL(window,true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
+    /*-----Wii Remote init---------*/
+    wiimote ** wiimotes; 
+    static int found = 0;
+    static int connected = 0;
+    /* Initalize the array of wiimote objects (not connected yet) */
+    wiimotes = wiiuse_init(MAX_WIIMOTES);
+
     
     
     emumerateDeviceList();
@@ -99,8 +109,8 @@ int main()
         static int selectedItem = 0;
         const char* items[] = { "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO" };
         const char* previewValue = items[selectedItem];
-
-         /* Profile selection */
+       
+        /* Profile selection */
         ImGui::Text("Profile(s)");
         ImGui::PushItemWidth(200);
         if(ImGui::BeginCombo(("##XXX"),previewValue))
@@ -155,8 +165,116 @@ int main()
             }
           }
           ImGui::EndCombo();
-          ImGui::PopItemWidth();
+          ImGui::PopItemWidth();   
         }
+
+        /*---Wii Buttons---*/
+        ImGui::SeparatorText("Buttons");
+        /*--Wii Button TEMP Vectors */
+        std::vector<int> wiiA = {1,30,0x100};
+        /*Wii A*/
+        ImGui::Text("A");
+        ImGui::SameLine();
+        if(ImGui::Button("TEST BUTTON"))
+        {
+
+        }
+        ImGui::Text("B");
+        ImGui::SameLine();
+        if(ImGui::Button("TEST BUTTON"))
+        {
+
+        }
+        ImGui::Text("1");
+        ImGui::SameLine();
+        if(ImGui::Button("TEST BUTTON"))
+        {
+
+        }
+        ImGui::Text("2");
+        ImGui::SameLine();
+        if(ImGui::Button("TEST BUTTON"))
+        {
+
+        }
+        ImGui::Text("-");
+        ImGui::SameLine();
+        if(ImGui::Button("TEST BUTTON"))
+        {
+
+        }
+        ImGui::Text("+");
+        ImGui::SameLine();
+        if(ImGui::Button("TEST BUTTON"))
+        {
+
+        }
+
+        /*---Wii D-PAD Buttons---*/
+        ImGui::SeparatorText("D-Pad");
+        /*--Wii Button TEMP Vectors */
+        std::vector<int> wiiUp = {1,30,0x100};
+        /*Wii Up*/
+        ImGui::Text("Up");
+        ImGui::SameLine();
+        if(ImGui::Button("TEST BUTTON"))
+        {
+
+        }
+        ImGui::Text("Down");
+        ImGui::SameLine();
+        if(ImGui::Button("TEST BUTTON"))
+        {
+
+        }
+        ImGui::Text("Left");
+        ImGui::SameLine();
+        if(ImGui::Button("TEST BUTTON"))
+        {
+
+        }
+        ImGui::Text("Right");
+        ImGui::SameLine();
+        if(ImGui::Button("TEST BUTTON"))
+        {
+        }
+
+        /*Connect Wii Remote */
+        if(ImGui::Button("Connect Wii Remote "))
+        {
+          /* Find Wiimote devices */
+          found = wiiuse_find(wiimotes,MAX_WIIMOTES,STANDARD_TIMEOUT);
+
+          if(!found)
+          {
+              printf("No Wiimotes found\n");
+              return -1;
+          }
+
+          /* Connect to wiimotes */
+          connected = wiiuse_connect(wiimotes,MAX_WIIMOTES);
+
+          if(!connected)
+          {
+              printf("Failed to connect to wiimote\n");
+              return -1;
+          }
+
+          wiiuse_set_leds(wiimotes[0],WIIMOTE_LED_1);
+          wiiuse_set_aspect_ratio(wiimotes[0], WIIUSE_ASPECT_16_9);
+          int height = 1300;
+          int width = 2500;
+          wiiuse_set_ir_vres(wiimotes[0],width * 1.2 ,height * 1.2 );
+
+          wiiuse_set_ir_sensitivity(wiimotes[0],3);
+
+        }
+        ImGui::SameLine();
+        (connected) ? ImGui::Text("Wii Remote Connected") : ImGui::Text("No Wii Remote Connected");
+
+
+
+        
 
   
         

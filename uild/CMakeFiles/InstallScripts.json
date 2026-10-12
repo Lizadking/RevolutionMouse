@@ -1,0 +1,9 @@
+{
+	"InstallScripts" : 
+	[
+		"/run/media/lizadking/Programming/RevolutionMouse/uild/cmake_install.cmake",
+		"/run/media/lizadking/Programming/RevolutionMouse/uild/_deps/wiiuse-build/cmake_install.cmake",
+		"/run/media/lizadking/Programming/RevolutionMouse/uild/_deps/wiiuse-build/src/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

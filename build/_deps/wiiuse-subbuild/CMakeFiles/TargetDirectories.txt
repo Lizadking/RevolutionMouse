@@ -1,0 +1,3 @@
+/run/media/lizadking/Programming/RevolutionMouse/build/_deps/wiiuse-subbuild/CMakeFiles/wiiuse-populate.dir
+/run/media/lizadking/Programming/RevolutionMouse/build/_deps/wiiuse-subbuild/CMakeFiles/edit_cache.dir
+/run/media/lizadking/Programming/RevolutionMouse/build/_deps/wiiuse-subbuild/CMakeFiles/rebuild_cache.dir

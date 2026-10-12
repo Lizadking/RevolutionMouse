@@ -59,6 +59,9 @@ int VirtualDeviceNix::initalize()
     .value = 0,
     .minimum = 0,
     .maximum = 2500,
+                     /* Check with main.cpp because this is also tied to the wii internal resolution. Consider creating a global static to pass here    
+                         since this value will be changing depending on the monitor size it should be kept to this for testing but consider creating
+                         a monitor struct or finishing the class to properly define the screen size before proceeding */
     .fuzz = 0,
     .flat = 0,
     .resolution = 2600 //also dpi
@@ -67,7 +70,9 @@ int VirtualDeviceNix::initalize()
     struct input_absinfo absinfo_y{
     .value = 0,
     .minimum = 0,
-    .maximum = 1300,
+    .maximum = 1300,  /* Check with main.cpp because this is also tied to the wii internal resolution. Consider creating a global static to pass here    
+                         since this value will be changing depending on the monitor size it should be kept to this for testing but consider creating
+                         a monitor struct or finishing the class to properly define the screen size before proceeding */
     .fuzz = 0,
     .flat = 0,
     .resolution = 2600 //also dpi

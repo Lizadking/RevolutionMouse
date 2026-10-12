@@ -9,12 +9,14 @@
 
 #include "include/glad.h"
 #include <GLFW/glfw3.h>
+#include <X11/Xlib.h>
 
 #include "include/profileNix.h"
 #include "include/profileManagerNix.h"
 #include "include/virtualDeviceNix.h"
 #include "include/wiiusehelper.h"
 #include "include/fileio.h"
+#include "include/monitor.h"
 #include <libevdev/libevdev-uinput.h>
 
 
@@ -51,6 +53,16 @@ int main()
 	initalizeProfileDirectory(&logger);
 	iterateProfileDirectory(&logger,*profileManager);
 
+    /*Testing querying information from the X-Server*/
+    monitor test; 
+    test.height = 0;
+    test.width = 0;
+    Display *testPtr = XOpenDisplay(NULL);
+    std::cout<<ScreenCount(testPtr)<<std::endl;
+    test.height = XHeightOfScreen(XDefaultScreenOfDisplay(testPtr));
+    test.width = XWidthOfScreen(XDefaultScreenOfDisplay(testPtr));
+    std::cout<<"WDITH: "<<test.width<<std::endl;
+    std::cout<<"HEIGHT: "<<test.height<<std::endl;
     /*********************************************************************
     ** 
     ** WIIMOTE SETUP

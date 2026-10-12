@@ -91,7 +91,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
    
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE PkgConfig::LIBEVDEV wiiuse OpenGL::GL glfw)
+target_link_libraries(${PROJECT_NAME} PRIVATE PkgConfig::LIBEVDEV wiiuse OpenGL::GL glfw X11)
 #---------------------------------------
 
 
@@ -111,5 +111,5 @@ target_include_directories(debug PRIVATE ${imgui_SOURCE_DIR})
 target_include_directories(debug PRIVATE ${imgui_SOURCE_DIR}/backends)
 
 target_include_directories(debug PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(debug PRIVATE PkgConfig::LIBEVDEV wiiuse  OpenGL::GL glfw)
+target_link_libraries(debug PRIVATE PkgConfig::LIBEVDEV wiiuse  OpenGL::GL glfw X11)
 #----------------------------------------
