@@ -96,11 +96,13 @@ void handle_event(struct wiimote_t* wm,std::shared_ptr<VirtualDeviceNix> virtual
 	}
 	if (IS_PRESSED(wm, WIIMOTE_BUTTON_MINUS))	{
 		printf("MINUS pressed\n");
-        virtualDev->pressWiiKey(WII_MINUS);
+        //virtualDev->pressWiiKey(WII_MINUS);
+		wiiuse_set_ir(wm, 0);
 	}
 	if (IS_PRESSED(wm, WIIMOTE_BUTTON_PLUS))	{
 		printf("PLUS pressed\n");
-        virtualDev->pressWiiKey(WII_PLUS);
+        //virtualDev->pressWiiKey(WII_PLUS);
+		wiiuse_set_ir(wm, 1);
 	}
 	if (IS_PRESSED(wm, WIIMOTE_BUTTON_ONE)) {
 		printf("ONE pressed\n");
@@ -143,7 +145,7 @@ void handle_event(struct wiimote_t* wm,std::shared_ptr<VirtualDeviceNix> virtual
 	}
 
 	if (IS_JUST_PRESSED(wm, WIIMOTE_BUTTON_TWO)) {
-		wiiuse_set_motion_plus(wm, 0); // off
+		//wiiuse_set_motion_plus(wm, 0); // off
 	}
 	/*
 	 *	If IR tracking is enabled then print the coordinates
@@ -152,10 +154,23 @@ void handle_event(struct wiimote_t* wm,std::shared_ptr<VirtualDeviceNix> virtual
 	 *	Also make sure that we see at least 1 dot.
 	 */
 	if (WIIUSE_USING_IR(wm)) 
-	{
-			
-			
+	{	
+		int i = 0;
+
+		/* go through each of the 4 possible IR sources */
+		for (; i < 4; ++i) {
+			/* check if the source is visible */
+			if (wm->ir.dot[i].visible) {
+				printf("IR source %i: (%u, %u)\n", i, wm->ir.dot[i].x, wm->ir.dot[i].y);
+			}
+		}
+
+		printf("IR cursor: (%u, %u)\n", wm->ir.x, wm->ir.y);
+		printf("IR z distance: %f\n", wm->ir.z);
+    
+		virtualDev->moveMouse(wm->ir.x,wm->ir.y);
 		
+
         
 	}
 
@@ -271,7 +286,7 @@ void handle_event_debug_motion(struct wiimote_t* wm,std::shared_ptr<VirtualDevic
 		printf("IR cursor: (%u, %u)\n", wm->ir.x, wm->ir.y);
 		printf("IR z distance: %f\n", wm->ir.z);
     
-		//virtualDev->moveMouse(wm->ir.x,wm->ir.y);
+		virtualDev->moveMouse(wm->ir.x,wm->ir.y);
 		
 
         

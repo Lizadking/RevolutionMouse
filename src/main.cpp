@@ -54,15 +54,14 @@ int main()
 	iterateProfileDirectory(&logger,*profileManager);
 
     /*Testing querying information from the X-Server*/
-    monitor test; 
-    test.height = 0;
-    test.width = 0;
-    Display *testPtr = XOpenDisplay(NULL);
-    std::cout<<ScreenCount(testPtr)<<std::endl;
-    test.height = XHeightOfScreen(XDefaultScreenOfDisplay(testPtr));
-    test.width = XWidthOfScreen(XDefaultScreenOfDisplay(testPtr));
-    std::cout<<"WDITH: "<<test.width<<std::endl;
-    std::cout<<"HEIGHT: "<<test.height<<std::endl;
+    monitor mainScreen; 
+    createAndBindDisplay(&mainScreen);
+
+    mainScreen.width = getScreenWidth(mainScreen.screenDisplay,&logger);
+    mainScreen.height = getScreenHeight(mainScreen.screenDisplay,&logger);
+    mainScreen.screenCount =  getScreenCount(mainScreen.screenDisplay,&logger);
+    std::cout<<"WDITH: "<<mainScreen.width<<std::endl;
+    std::cout<<"HEIGHT: "<<mainScreen.height<<std::endl;
     /*********************************************************************
     ** 
     ** WIIMOTE SETUP
@@ -150,6 +149,8 @@ int main()
     **
     *********************************************************************/
     wiiuse_cleanup(wiimotes, MAX_WIIMOTES);
+    destroyMinitor(&mainScreen,&logger);
+    
 
     
    
